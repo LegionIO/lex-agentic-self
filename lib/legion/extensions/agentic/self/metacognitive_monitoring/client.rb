@@ -1,0 +1,25 @@
+# frozen_string_literal: true
+
+require 'legion/extensions/agentic/self/metacognitive_monitoring/runners/metacognitive_monitoring'
+
+module Legion
+  module Extensions
+    module Agentic
+      module Self
+        module MetacognitiveMonitoring
+          class Client
+            include Runners::MetacognitiveMonitoring
+
+            def initialize(engine: nil)
+              @monitoring_engine = engine || Helpers::MonitoringEngine.new
+            end
+
+            private
+
+            attr_reader :monitoring_engine
+          end
+        end
+      end
+    end
+  end
+end
