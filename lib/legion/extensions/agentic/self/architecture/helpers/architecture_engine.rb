@@ -15,6 +15,10 @@ module Legion
               end
 
               def register_subsystem(name:, subsystem_type:, health: Constants::DEFAULT_HEALTH)
+                unless Constants::SUBSYSTEM_TYPES.include?(subsystem_type.to_sym)
+                  raise ArgumentError,
+                        "invalid subsystem_type: #{subsystem_type.inspect}, must be one of #{Constants::SUBSYSTEM_TYPES}"
+                end
                 raise ArgumentError, "subsystem '#{name}' already registered" if @subsystems.key?(name.to_sym)
                 raise ArgumentError, "max subsystems (#{Constants::MAX_SUBSYSTEMS}) reached" if @subsystems.size >= Constants::MAX_SUBSYSTEMS
 
@@ -24,6 +28,10 @@ module Legion
               end
 
               def create_connection(source_name:, target_name:, connection_type: :informational, weight: 0.5)
+                unless Constants::CONNECTION_TYPES.include?(connection_type.to_sym)
+                  raise ArgumentError,
+                        "invalid connection_type: #{connection_type.inspect}, must be one of #{Constants::CONNECTION_TYPES}"
+                end
                 raise ArgumentError, "max connections (#{Constants::MAX_CONNECTIONS}) reached" if @connections.size >= Constants::MAX_CONNECTIONS
 
                 source = find_subsystem!(source_name)

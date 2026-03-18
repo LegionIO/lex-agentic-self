@@ -37,6 +37,18 @@ RSpec.describe Legion::Extensions::Agentic::Self::NarrativeIdentity::Helpers::Na
       expect(engine.episodes.size).to eq(max)
       expect(engine.episodes.key?(first_ep.id)).to be false
     end
+
+    it 'rejects invalid episode_type' do
+      expect(add_ep(type: :daydream)).to be_nil
+    end
+
+    it 'accepts all valid EPISODE_TYPES' do
+      constants = Legion::Extensions::Agentic::Self::NarrativeIdentity::Helpers::Constants
+      constants::EPISODE_TYPES.each do |etype|
+        result = add_ep(type: etype)
+        expect(result).not_to be_nil
+      end
+    end
   end
 
   describe '#create_chapter' do
@@ -106,6 +118,18 @@ RSpec.describe Legion::Extensions::Agentic::Self::NarrativeIdentity::Helpers::Na
       expect(engine.add_theme(name: 'x', theme_type: :agency)).to be_a(
         Legion::Extensions::Agentic::Self::NarrativeIdentity::Helpers::Theme
       )
+    end
+
+    it 'rejects invalid theme_type' do
+      expect(engine.add_theme(name: 'bad', theme_type: :chaos)).to be_nil
+    end
+
+    it 'accepts all valid THEME_TYPES' do
+      constants = Legion::Extensions::Agentic::Self::NarrativeIdentity::Helpers::Constants
+      constants::THEME_TYPES.each do |ttype|
+        result = engine.add_theme(name: "theme_#{ttype}", theme_type: ttype)
+        expect(result).not_to be_nil
+      end
     end
   end
 

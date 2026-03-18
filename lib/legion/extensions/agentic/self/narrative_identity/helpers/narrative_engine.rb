@@ -16,6 +16,8 @@ module Legion
               end
 
               def add_episode(content:, episode_type:, emotional_valence:, significance:, domain:)
+                return nil unless Constants::EPISODE_TYPES.include?(episode_type)
+
                 prune_episodes! if @episodes.size >= Constants::MAX_EPISODES
                 episode = Episode.new(
                   content:           content,
@@ -54,6 +56,8 @@ module Legion
               end
 
               def add_theme(name:, theme_type:)
+                return nil unless Constants::THEME_TYPES.include?(theme_type)
+
                 prune_themes! if @themes.size >= Constants::MAX_THEMES
                 theme = Theme.new(name: name, theme_type: theme_type)
                 @themes[theme.id] = theme

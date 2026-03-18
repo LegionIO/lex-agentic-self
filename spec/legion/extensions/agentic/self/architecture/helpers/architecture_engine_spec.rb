@@ -31,6 +31,18 @@ RSpec.describe Legion::Extensions::Agentic::Self::Architecture::Helpers::Archite
       sub = engine.register_subsystem(name: :custom, subsystem_type: :safety, health: 0.5)
       expect(sub.health).to eq(0.5)
     end
+
+    it 'raises on invalid subsystem_type' do
+      expect { engine.register_subsystem(name: :bad, subsystem_type: :telekinesis) }
+        .to raise_error(ArgumentError, /invalid subsystem_type/)
+    end
+
+    it 'accepts all valid SUBSYSTEM_TYPES' do
+      constants::SUBSYSTEM_TYPES.each do |stype|
+        result = engine.register_subsystem(name: :"sub_#{stype}", subsystem_type: stype)
+        expect(result).not_to be_nil
+      end
+    end
   end
 
   describe '#create_connection' do
@@ -60,6 +72,18 @@ RSpec.describe Legion::Extensions::Agentic::Self::Architecture::Helpers::Archite
       )
       expect(conn.connection_type).to eq(:excitatory)
       expect(conn.weight).to eq(0.9)
+    end
+
+    it 'raises on invalid connection_type' do
+      expect { engine.create_connection(source_name: :source, target_name: :target, connection_type: :telepathic) }
+        .to raise_error(ArgumentError, /invalid connection_type/)
+    end
+
+    it 'accepts all valid CONNECTION_TYPES' do
+      constants::CONNECTION_TYPES.each do |ctype|
+        conn = engine.create_connection(source_name: :source, target_name: :target, connection_type: ctype)
+        expect(conn).not_to be_nil
+      end
     end
   end
 

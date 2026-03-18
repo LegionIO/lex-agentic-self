@@ -7,7 +7,7 @@
 Domain consolidation gem for self-model, identity, metacognition, and self-awareness. Bundles 16 source extensions into one loadable unit under `Legion::Extensions::Agentic::Self`.
 
 **Gem**: `lex-agentic-self`
-**Version**: 0.1.0
+**Version**: 0.1.1
 **Namespace**: `Legion::Extensions::Agentic::Self`
 
 ## Sub-Modules
@@ -49,6 +49,6 @@ After consolidation, `Metacognition` is at `Legion::Extensions::Agentic::Self::M
 
 ```bash
 bundle install   # includes faraday ~> 2.0 for identity/graph_client
-bundle exec rspec        # 1752 examples, 0 failures
+bundle exec rspec        # 1760 examples, 0 failures
 bundle exec rubocop      # 0 offenses
 ```
