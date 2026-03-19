@@ -31,7 +31,10 @@ Domain consolidation gem for self-model, identity, metacognition, and self-aware
 
 ## Actors
 
+- `Self::DefaultModeNetwork::Actors::Idle` — interval actor, activates DMN during idle periods
+- `Self::Identity::Actors::CredentialRefresh` — interval actor, refreshes Entra ID credentials
 - `Self::Identity::Actors::OrphanCheck` — runs every 14400s (4hr), checks for orphaned workers
+- `Self::NarrativeIdentity::Actors::NarrativeDecay` — interval actor, decays narrative identity strength
 - `Self::SelfTalk::Actors::VolumeDecay` — runs every 300s, decays inner voice volumes
 
 ## Installation
