@@ -18,13 +18,13 @@ module Legion
                   volume:         volume,
                   bias_direction: bias_direction
                 )
-                Legion::Logging.info "[self_talk] register_voice: name=#{name} type=#{voice_type} registered=#{result[:registered]}"
+                log.info "[self_talk] register_voice: name=#{name} type=#{voice_type} registered=#{result[:registered]}"
                 result
               end
 
               def start_dialogue(topic:, **)
                 result = engine.start_dialogue(topic: topic)
-                Legion::Logging.debug "[self_talk] start_dialogue: topic=#{topic} id=#{result[:dialogue][:id]}"
+                log.debug "[self_talk] start_dialogue: topic=#{topic} id=#{result[:dialogue][:id]}"
                 result
               end
 
@@ -36,14 +36,14 @@ module Legion
                   position:    position,
                   strength:    strength
                 )
-                Legion::Logging.debug "[self_talk] add_turn: dialogue=#{dialogue_id} voice=#{voice_id} added=#{result[:added]}"
+                log.debug "[self_talk] add_turn: dialogue=#{dialogue_id} voice=#{voice_id} added=#{result[:added]}"
                 result
               end
 
               def conclude_dialogue(dialogue_id:, summary: nil, **)
                 resolved_summary = summary || generate_summary_for_dialogue(dialogue_id)
                 result = engine.conclude_dialogue(dialogue_id: dialogue_id, summary: resolved_summary)
-                Legion::Logging.info "[self_talk] conclude_dialogue: id=#{dialogue_id} concluded=#{result[:concluded]}"
+                log.info "[self_talk] conclude_dialogue: id=#{dialogue_id} concluded=#{result[:concluded]}"
                 result
               end
 
@@ -59,37 +59,37 @@ module Legion
                   content:     content[:content],
                   position:    content[:position]
                 )
-                Legion::Logging.debug "[self_talk] generate_voice_turn: dialogue=#{dialogue_id} voice=#{voice_id} source=#{source}"
+                log.debug "[self_talk] generate_voice_turn: dialogue=#{dialogue_id} voice=#{voice_id} source=#{source}"
                 { generated: true, source: source, turn: turn_result[:turn] }
               end
 
               def deadlock_dialogue(dialogue_id:, **)
                 result = engine.deadlock_dialogue(dialogue_id: dialogue_id)
-                Legion::Logging.warn "[self_talk] deadlock_dialogue: id=#{dialogue_id} deadlocked=#{result[:deadlocked]}"
+                log.warn "[self_talk] deadlock_dialogue: id=#{dialogue_id} deadlocked=#{result[:deadlocked]}"
                 result
               end
 
               def amplify_voice(voice_id:, amount: Helpers::Constants::VOLUME_BOOST, **)
                 result = engine.amplify_voice(voice_id: voice_id, amount: amount)
-                Legion::Logging.debug "[self_talk] amplify_voice: id=#{voice_id} volume=#{result[:volume]}"
+                log.debug "[self_talk] amplify_voice: id=#{voice_id} volume=#{result[:volume]}"
                 result
               end
 
               def dampen_voice(voice_id:, amount: Helpers::Constants::VOLUME_DECAY, **)
                 result = engine.dampen_voice(voice_id: voice_id, amount: amount)
-                Legion::Logging.debug "[self_talk] dampen_voice: id=#{voice_id} volume=#{result[:volume]}"
+                log.debug "[self_talk] dampen_voice: id=#{voice_id} volume=#{result[:volume]}"
                 result
               end
 
               def dialogue_report(dialogue_id:, **)
                 result = engine.dialogue_report(dialogue_id: dialogue_id)
-                Legion::Logging.debug "[self_talk] dialogue_report: id=#{dialogue_id} found=#{result[:found]}"
+                log.debug "[self_talk] dialogue_report: id=#{dialogue_id} found=#{result[:found]}"
                 result
               end
 
               def self_talk_status(**)
                 summary = engine.to_h
-                Legion::Logging.debug "[self_talk] status: voices=#{summary[:voice_count]} dialogues=#{summary[:dialogue_count]}"
+                log.debug "[self_talk] status: voices=#{summary[:voice_count]} dialogues=#{summary[:dialogue_count]}"
                 summary
               end
 
@@ -100,7 +100,7 @@ module Legion
                   decayed += 1
                   { id: voice.id, name: voice.name, volume: voice.volume }
                 end
-                Legion::Logging.debug "[self-talk] voice decay: decayed=#{decayed} voices"
+                log.debug "[self-talk] voice decay: decayed=#{decayed} voices"
                 { decayed: decayed, voices: voice_list }
               end
 

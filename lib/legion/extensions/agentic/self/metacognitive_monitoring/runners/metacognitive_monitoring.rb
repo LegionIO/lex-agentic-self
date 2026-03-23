@@ -26,8 +26,8 @@ module Legion
                   effort:               effort
                 )
 
-                Legion::Logging.debug "[metacognitive] record_judgment type=#{type_sym} domain=#{domain} " \
-                                      "confidence=#{judgment.predicted_confidence.round(2)} id=#{judgment.id[0..7]}"
+                log.debug "[metacognitive] record_judgment type=#{type_sym} domain=#{domain} " \
+                          "confidence=#{judgment.predicted_confidence.round(2)} id=#{judgment.id[0..7]}"
 
                 { success: true, judgment_id: judgment.id, judgment: judgment.to_h }
               end
@@ -37,12 +37,12 @@ module Legion
                 judgment = eng.resolve_judgment(judgment_id: judgment_id, actual_outcome: actual_outcome)
 
                 unless judgment
-                  Legion::Logging.debug "[metacognitive] resolve_judgment not_found id=#{judgment_id[0..7]}"
+                  log.debug "[metacognitive] resolve_judgment not_found id=#{judgment_id[0..7]}"
                   return { success: false, error: :not_found }
                 end
 
-                Legion::Logging.info "[metacognitive] resolved judgment=#{judgment_id[0..7]} " \
-                                     "error=#{judgment.calibration_error&.round(3)}"
+                log.info "[metacognitive] resolved judgment=#{judgment_id[0..7]} " \
+                         "error=#{judgment.calibration_error&.round(3)}"
 
                 { success: true, judgment_id: judgment_id, judgment: judgment.to_h }
               end
@@ -51,7 +51,7 @@ module Legion
                 eng      = engine || monitoring_engine
                 judgment = eng.feeling_of_knowing(domain: domain, query: query)
 
-                Legion::Logging.debug "[metacognitive] fok domain=#{domain} confidence=#{judgment.predicted_confidence.round(2)}"
+                log.debug "[metacognitive] fok domain=#{domain} confidence=#{judgment.predicted_confidence.round(2)}"
 
                 {
                   success:              true,
@@ -66,7 +66,7 @@ module Legion
                 eng      = engine || monitoring_engine
                 judgment = eng.judgment_of_learning(domain: domain, content: content)
 
-                Legion::Logging.debug "[metacognitive] jol domain=#{domain} confidence=#{judgment.predicted_confidence.round(2)}"
+                log.debug "[metacognitive] jol domain=#{domain} confidence=#{judgment.predicted_confidence.round(2)}"
 
                 {
                   success:              true,
@@ -81,7 +81,7 @@ module Legion
                 eng      = engine || monitoring_engine
                 findings = eng.detect_overconfidence
 
-                Legion::Logging.debug "[metacognitive] overconfidence_scan count=#{findings.size}"
+                log.debug "[metacognitive] overconfidence_scan count=#{findings.size}"
 
                 {
                   success:  true,
@@ -94,7 +94,7 @@ module Legion
                 eng      = engine || monitoring_engine
                 findings = eng.detect_underconfidence
 
-                Legion::Logging.debug "[metacognitive] underconfidence_scan count=#{findings.size}"
+                log.debug "[metacognitive] underconfidence_scan count=#{findings.size}"
 
                 {
                   success:  true,
@@ -107,7 +107,7 @@ module Legion
                 eng    = engine || monitoring_engine
                 report = eng.calibration_report
 
-                Legion::Logging.debug "[metacognitive] calibration_report domains=#{report[:by_domain].size}"
+                log.debug "[metacognitive] calibration_report domains=#{report[:by_domain].size}"
 
                 { success: true, report: report }
               end
@@ -116,7 +116,7 @@ module Legion
                 eng    = engine || monitoring_engine
                 report = eng.monitoring_report
 
-                Legion::Logging.debug "[metacognitive] monitoring_report total=#{report[:total_judgments]}"
+                log.debug "[metacognitive] monitoring_report total=#{report[:total_judgments]}"
 
                 { success: true, report: report }
               end

@@ -16,11 +16,11 @@ module Legion
                 arc = eng.create_arc(title: title, domain: domain, initial_tension: initial_tension)
 
                 unless arc
-                  Legion::Logging.warn "[narrative_arc] create_arc failed: engine at capacity (#{Helpers::Constants::MAX_ARCS})"
+                  log.warn "[narrative_arc] create_arc failed: engine at capacity (#{Helpers::Constants::MAX_ARCS})"
                   return { success: false, reason: :engine_at_capacity }
                 end
 
-                Legion::Logging.debug "[narrative_arc] arc created: #{arc.arc_id[0..7]} title=#{title} domain=#{domain}"
+                log.debug "[narrative_arc] arc created: #{arc.arc_id[0..7]} title=#{title} domain=#{domain}"
                 { success: true, arc_id: arc.arc_id, title: arc.title, arc_phase: arc.arc_phase,
                   tension_level: arc.tension_level }
               end
@@ -39,11 +39,11 @@ module Legion
 
                 if result[:success]
                   arc = eng.get_arc(arc_id)
-                  Legion::Logging.debug "[narrative_arc] beat added: arc=#{arc_id[0..7]} type=#{beat_type} " \
-                                        "phase=#{result[:arc_phase]} tension=#{result[:tension_level].round(2)}"
+                  log.debug "[narrative_arc] beat added: arc=#{arc_id[0..7]} type=#{beat_type} " \
+                            "phase=#{result[:arc_phase]} tension=#{result[:tension_level].round(2)}"
                   result[:dramatic_score] = arc.dramatic_score if arc
                 else
-                  Legion::Logging.debug "[narrative_arc] add_beat failed: #{result[:reason]} arc=#{arc_id[0..7]}"
+                  log.debug "[narrative_arc] add_beat failed: #{result[:reason]} arc=#{arc_id[0..7]}"
                 end
 
                 result
@@ -60,14 +60,14 @@ module Legion
               def active_arcs(engine: nil, **)
                 eng = engine || arc_engine
                 arcs = eng.active_arcs
-                Legion::Logging.debug "[narrative_arc] active arcs count=#{arcs.size}"
+                log.debug "[narrative_arc] active arcs count=#{arcs.size}"
                 { arcs: arcs.map(&:to_h), count: arcs.size }
               end
 
               def completed_arcs(engine: nil, **)
                 eng = engine || arc_engine
                 arcs = eng.completed_arcs
-                Legion::Logging.debug "[narrative_arc] completed arcs count=#{arcs.size}"
+                log.debug "[narrative_arc] completed arcs count=#{arcs.size}"
                 { arcs: arcs.map(&:to_h), count: arcs.size }
               end
 
@@ -76,14 +76,14 @@ module Legion
                 arc = eng.most_dramatic_arc
                 return { found: false } unless arc
 
-                Legion::Logging.debug "[narrative_arc] most dramatic: #{arc.arc_id[0..7]} score=#{arc.dramatic_score.round(2)}"
+                log.debug "[narrative_arc] most dramatic: #{arc.arc_id[0..7]} score=#{arc.dramatic_score.round(2)}"
                 { found: true, arc: arc.to_h }
               end
 
               def arc_report(engine: nil, **)
                 eng = engine || arc_engine
                 report = eng.arc_report
-                Legion::Logging.debug "[narrative_arc] arc_report total=#{report[:total_arcs]} patterns=#{report[:patterns].inspect}"
+                log.debug "[narrative_arc] arc_report total=#{report[:total_arcs]} patterns=#{report[:patterns].inspect}"
                 { success: true, report: report }
               end
 

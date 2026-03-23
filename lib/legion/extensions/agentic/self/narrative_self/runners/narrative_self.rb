@@ -20,7 +20,7 @@ module Legion
                   emotional_valence: emotional_valence,
                   tags:              tags
                 )
-                Legion::Logging.debug "[narrative_self] recorded episode=#{episode_type} domain=#{domain} sig=#{episode.significance.round(3)}"
+                log.debug "[narrative_self] recorded episode=#{episode_type} domain=#{domain} sig=#{episode.significance.round(3)}"
                 { success: true, episode: episode.to_h }
               end
 
@@ -41,7 +41,7 @@ module Legion
 
               def create_thread(theme:, domain: :general, **)
                 thread = autobiography.create_thread(theme: theme, domain: domain)
-                Legion::Logging.debug "[narrative_self] created thread=#{theme} domain=#{domain}"
+                log.debug "[narrative_self] created thread=#{theme} domain=#{domain}"
                 { success: true, thread: thread.to_h }
               end
 
@@ -58,13 +58,13 @@ module Legion
 
               def self_summary(**)
                 summary = autobiography.self_summary
-                Legion::Logging.debug "[narrative_self] summary: episodes=#{summary[:total_episodes]} richness=#{summary[:narrative_richness].round(3)}"
+                log.debug "[narrative_self] summary: episodes=#{summary[:total_episodes]} richness=#{summary[:narrative_richness].round(3)}"
                 { success: true, summary: summary }
               end
 
               def update_narrative_self(**)
                 autobiography.decay_all
-                Legion::Logging.debug "[narrative_self] tick: episodes=#{autobiography.episodes.size} threads=#{autobiography.threads.size}"
+                log.debug "[narrative_self] tick: episodes=#{autobiography.episodes.size} threads=#{autobiography.threads.size}"
                 { success: true, episode_count: autobiography.episodes.size, thread_count: autobiography.threads.size }
               end
 

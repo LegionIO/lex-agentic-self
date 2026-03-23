@@ -19,8 +19,8 @@ module Legion
                   magnitude: magnitude, attribution: attribution
                 )
                 efficacy_model.record_outcome(event)
-                Legion::Logging.debug "[agency] mastery #{outcome_type} in #{domain} " \
-                                      "efficacy=#{efficacy_model.efficacy_for(domain).round(4)}"
+                log.debug "[agency] mastery #{outcome_type} in #{domain} " \
+                          "efficacy=#{efficacy_model.efficacy_for(domain).round(4)}"
                 { success: true, event: event.to_h, efficacy: efficacy_model.efficacy_for(domain).round(4) }
               end
 
@@ -30,7 +30,7 @@ module Legion
                   magnitude: magnitude, attribution: :partial_agency
                 )
                 efficacy_model.record_outcome(event)
-                Legion::Logging.debug "[agency] vicarious #{outcome_type} in #{domain}"
+                log.debug "[agency] vicarious #{outcome_type} in #{domain}"
                 { success: true, event: event.to_h, efficacy: efficacy_model.efficacy_for(domain).round(4) }
               end
 
@@ -41,7 +41,7 @@ module Legion
                   magnitude: magnitude, attribution: :partial_agency
                 )
                 efficacy_model.record_outcome(event)
-                Legion::Logging.debug "[agency] persuasion #{positive ? 'positive' : 'negative'} in #{domain}"
+                log.debug "[agency] persuasion #{positive ? 'positive' : 'negative'} in #{domain}"
                 { success: true, event: event.to_h, efficacy: efficacy_model.efficacy_for(domain).round(4) }
               end
 
@@ -53,14 +53,14 @@ module Legion
                   magnitude: magnitude, attribution: :low_agency
                 )
                 efficacy_model.record_outcome(event)
-                Legion::Logging.debug "[agency] physiological #{state} in #{domain}"
+                log.debug "[agency] physiological #{state} in #{domain}"
                 { success: true, event: event.to_h, efficacy: efficacy_model.efficacy_for(domain).round(4) }
               end
 
               def update_agency(**)
                 efficacy_model.decay_all
-                Legion::Logging.debug "[agency] tick: domains=#{efficacy_model.domain_count} " \
-                                      "overall=#{efficacy_model.overall_efficacy.round(4)}"
+                log.debug "[agency] tick: domains=#{efficacy_model.domain_count} " \
+                          "overall=#{efficacy_model.overall_efficacy.round(4)}"
                 { success: true, stats: efficacy_model.to_h }
               end
 

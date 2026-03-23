@@ -22,7 +22,7 @@ module Legion
                           snapshot_store.latest
                         end
 
-                Legion::Logging.debug "[metacognition] introspect: #{model.dig(:architecture, :loaded_count)} extensions loaded"
+                log.debug "[metacognition] introspect: #{model.dig(:architecture, :loaded_count)} extensions loaded"
                 model
               end
 

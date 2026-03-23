@@ -37,7 +37,7 @@ module Legion
                   end
                 end
 
-                Legion::Logging.debug "[reflection] generated #{new_reflections.size} reflections, health=#{reflection_store.cognitive_health}"
+                log.debug "[reflection] generated #{new_reflections.size} reflections, health=#{reflection_store.cognitive_health}"
 
                 {
                   reflections_generated: new_reflections.size,
@@ -61,13 +61,13 @@ module Legion
 
                 reflection ||= build_mechanical_dream_reflection(dream_results)
 
-                Legion::Logging.debug "[reflection] dream reflection generated source=#{source}"
+                log.debug "[reflection] dream reflection generated source=#{source}"
                 { reflection: reflection, source: source }
               end
 
               def cognitive_health(**)
                 health = reflection_store.cognitive_health
-                Legion::Logging.debug "[reflection] cognitive health: #{health}"
+                log.debug "[reflection] cognitive health: #{health}"
                 {
                   health:            health,
                   category_scores:   Helpers::Constants::CATEGORIES.to_h { |c| [c, reflection_store.category_score(c)] },
@@ -94,7 +94,7 @@ module Legion
                 return { error: :already_acted } if reflection[:acted_on]
 
                 reflection_store.mark_acted_on(reflection_id)
-                Legion::Logging.info "[reflection] adapted: #{reflection[:observation]}"
+                log.info "[reflection] adapted: #{reflection[:observation]}"
                 { adapted: true, reflection_id: reflection_id, recommendation: reflection[:recommendation] }
               end
 

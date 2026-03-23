@@ -30,18 +30,18 @@ module Legion
               end
 
               def acknowledge_deficit(deficit_id:, **)
-                Legion::Logging.debug "[anosognosia] acknowledge_deficit: id=#{deficit_id}"
+                log.debug "[anosognosia] acknowledge_deficit: id=#{deficit_id}"
                 engine.acknowledge_deficit(deficit_id: deficit_id)
               end
 
               def reveal_blind_spot(deficit_id:, **)
-                Legion::Logging.info "[anosognosia] reveal_blind_spot: id=#{deficit_id}"
+                log.info "[anosognosia] reveal_blind_spot: id=#{deficit_id}"
                 engine.reveal_blind_spot(deficit_id: deficit_id)
               end
 
               def awareness_score(**)
                 score = engine.awareness_score
-                Legion::Logging.debug "[anosognosia] awareness_score: score=#{score.round(2)}"
+                log.debug "[anosognosia] awareness_score: score=#{score.round(2)}"
                 {
                   awareness_score: score.round(10),
                   awareness_gap:   engine.awareness_gap,
@@ -51,18 +51,18 @@ module Legion
 
               def awareness_gap(**)
                 gap = engine.awareness_gap
-                Legion::Logging.debug "[anosognosia] awareness_gap: gap=#{gap.round(2)}"
+                log.debug "[anosognosia] awareness_gap: gap=#{gap.round(2)}"
                 { awareness_gap: gap, awareness_score: engine.awareness_score.round(10) }
               end
 
               def blind_spots(**)
                 spots = engine.blind_spots
-                Legion::Logging.debug "[anosognosia] blind_spots: count=#{spots.size}"
+                log.debug "[anosognosia] blind_spots: count=#{spots.size}"
                 { blind_spots: spots.map(&:to_h), count: spots.size }
               end
 
               def calibration_report(**)
-                Legion::Logging.info '[anosognosia] calibration_report requested'
+                log.info '[anosognosia] calibration_report requested'
                 engine.calibration_report
               end
 

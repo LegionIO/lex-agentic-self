@@ -13,8 +13,8 @@ module Legion
               def record_observation(category:, value:, **)
                 category = category.to_sym
                 result   = fingerprint_engine.record_observation(category: category, value: value.to_f)
-                Legion::Logging.debug "[cognitive_fingerprint] record category=#{category} " \
-                                      "baseline=#{result[:baseline]&.round(4)} samples=#{result[:samples]}"
+                log.debug "[cognitive_fingerprint] record category=#{category} " \
+                          "baseline=#{result[:baseline]&.round(4)} samples=#{result[:samples]}"
                 result
               end
 
@@ -23,16 +23,16 @@ module Legion
                   { category: obs[:category].to_sym, value: obs[:value].to_f }
                 end
                 result = fingerprint_engine.verify_identity(observations: parsed)
-                Legion::Logging.info "[cognitive_fingerprint] verify score=#{result[:match_score]&.round(4)} " \
-                                     "verdict=#{result[:verdict]}"
+                log.info "[cognitive_fingerprint] verify score=#{result[:match_score]&.round(4)} " \
+                         "verdict=#{result[:verdict]}"
                 result
               end
 
               def anomaly_check(category:, value:, **)
                 result = fingerprint_engine.anomaly_check(category: category.to_sym, value: value.to_f)
                 if result[:anomaly]
-                  Legion::Logging.warn "[cognitive_fingerprint] anomaly category=#{category} " \
-                                       "deviation=#{result[:deviation]&.round(4)}"
+                  log.warn "[cognitive_fingerprint] anomaly category=#{category} " \
+                           "deviation=#{result[:deviation]&.round(4)}"
                 end
                 result
               end
@@ -52,7 +52,7 @@ module Legion
               def identity_confidence(**)
                 confidence = fingerprint_engine.identity_confidence
                 label      = fingerprint_engine.identity_label
-                Legion::Logging.debug "[cognitive_fingerprint] confidence=#{confidence.round(4)} label=#{label}"
+                log.debug "[cognitive_fingerprint] confidence=#{confidence.round(4)} label=#{label}"
                 { confidence: confidence, label: label }
               end
 
