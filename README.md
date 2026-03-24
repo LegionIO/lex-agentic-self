@@ -5,7 +5,7 @@ Domain consolidation gem for self-model, identity, metacognition, and self-aware
 ## Overview
 
 **Gem**: `lex-agentic-self`
-**Version**: 0.1.1
+**Version**: 0.1.0
 **Namespace**: `Legion::Extensions::Agentic::Self`
 
 ## Sub-Modules
@@ -47,7 +47,7 @@ gem 'lex-agentic-self'
 
 ```bash
 bundle install
-bundle exec rspec        # 1774 examples, 0 failures
+bundle exec rspec        # 1781 examples, 0 failures
 bundle exec rubocop      # 0 offenses
 ```
 

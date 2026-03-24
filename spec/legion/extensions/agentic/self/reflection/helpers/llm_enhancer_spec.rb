@@ -5,7 +5,11 @@ RSpec.describe Legion::Extensions::Agentic::Self::Reflection::Helpers::LlmEnhanc
 
   describe '.pipeline_available?' do
     it 'returns false when GaiaCaller is not defined' do
-      hide_const('Legion::LLM::Pipeline::GaiaCaller') rescue nil
+      begin
+        hide_const('Legion::LLM::Pipeline::GaiaCaller')
+      rescue StandardError
+        nil
+      end
       expect(described_class.pipeline_available?).to be false
     end
 
