@@ -1,6 +1,78 @@
 # frozen_string_literal: true
 
 RSpec.describe Legion::Extensions::Agentic::Self::Reflection::Helpers::LlmEnhancer do
+  let(:enhancer_mod) { described_class }
+
+  describe '.pipeline_available?' do
+    it 'returns false when GaiaCaller is not defined' do
+      hide_const('Legion::LLM::Pipeline::GaiaCaller') rescue nil
+      expect(described_class.pipeline_available?).to be false
+    end
+
+    it 'returns false when pipeline_enabled? is false' do
+      stub_const('Legion::LLM::Pipeline::GaiaCaller', double)
+      stub_const('Legion::LLM', double(respond_to?: true, pipeline_enabled?: false))
+      expect(described_class.pipeline_available?).to be false
+    end
+
+    it 'returns true when GaiaCaller defined and pipeline enabled' do
+      gaia_caller_mod = Module.new
+      pipeline_mod    = Module.new
+      pipeline_mod.const_set(:GaiaCaller, gaia_caller_mod)
+      llm_mod = Module.new
+      llm_mod.const_set(:Pipeline, pipeline_mod)
+      llm_mod.define_singleton_method(:respond_to?) { |*| true }
+      llm_mod.define_singleton_method(:pipeline_enabled?) { true }
+      stub_const('Legion::LLM', llm_mod)
+      expect(described_class.pipeline_available?).to be true
+    end
+
+    it 'returns false on any error' do
+      stub_const('Legion::LLM', double)
+      allow(Legion::LLM).to receive(:respond_to?).and_raise(StandardError)
+      expect(described_class.pipeline_available?).to be false
+    end
+  end
+
+  describe '.enhance' do
+    it 'uses GaiaCaller when pipeline is available' do
+      allow(enhancer_mod).to receive(:available?).and_return(true)
+      allow(enhancer_mod).to receive(:pipeline_available?).and_return(true)
+
+      mock_response = double(message: { content: 'reflected' })
+      gaia_caller_mod = Module.new
+      gaia_caller_mod.define_singleton_method(:chat) { |**| mock_response }
+      pipeline_mod = Module.new
+      pipeline_mod.const_set(:GaiaCaller, gaia_caller_mod)
+      llm_mod = Module.new
+      llm_mod.const_set(:Pipeline, pipeline_mod)
+      stub_const('Legion::LLM', llm_mod)
+
+      expect(gaia_caller_mod).to receive(:chat)
+        .with(hash_including(phase: 'reflection'))
+        .and_return(mock_response)
+
+      result = enhancer_mod.enhance('reflect on this', phase: 'reflection')
+      expect(result).to eq('reflected')
+    end
+
+    it 'falls back to legacy chat when pipeline unavailable' do
+      allow(enhancer_mod).to receive(:available?).and_return(true)
+      allow(enhancer_mod).to receive(:pipeline_available?).and_return(false)
+
+      mock_chat = double(ask: double(content: 'legacy reflected'))
+      stub_const('Legion::LLM', double(chat: mock_chat))
+
+      result = enhancer_mod.enhance('reflect on this', phase: 'reflection')
+      expect(result).to eq('legacy reflected')
+    end
+
+    it 'returns nil when not available' do
+      allow(enhancer_mod).to receive(:available?).and_return(false)
+      expect(enhancer_mod.enhance('hello')).to be_nil
+    end
+  end
+
   describe '.available?' do
     context 'when Legion::LLM is not defined' do
       it 'returns a falsy value' do

@@ -34,6 +34,32 @@ module Legion
                 false
               end
 
+              def pipeline_available?
+                !!(defined?(Legion::LLM::Pipeline::GaiaCaller) &&
+                   Legion::LLM.respond_to?(:pipeline_enabled?) &&
+                   Legion::LLM.pipeline_enabled?)
+              rescue StandardError
+                false
+              end
+
+              def enhance(prompt, phase: 'reflection', **kwargs)
+                return nil unless available?
+
+                if pipeline_available?
+                  response = Legion::LLM::Pipeline::GaiaCaller.chat(
+                    message: prompt, phase: phase, **kwargs
+                  )
+                  response&.message&.dig(:content)
+                else
+                  chat = Legion::LLM.chat
+                  response = chat.ask(prompt)
+                  response&.content
+                end
+              rescue StandardError => e
+                Legion::Logging.warn("[reflection:llm] enhance failed: #{e.message}")
+                nil
+              end
+
               def enhance_reflection(monitors_data:, health_scores:)
                 prompt = build_enhance_reflection_prompt(monitors_data: monitors_data, health_scores: health_scores)
                 response = llm_ask(prompt)
