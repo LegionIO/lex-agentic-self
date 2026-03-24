@@ -1,6 +1,14 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.4] - 2026-03-23
+
+### Fixed
+- Fix Style/RedundantParentheses on beginless ranges in Anchor constants
+
+## [0.1.3] - 2026-03-23
+
+### Changed
+- Pipeline-aware LlmEnhancer in Reflection sub-module
 
 ## [0.1.2] - 2026-03-22
 
