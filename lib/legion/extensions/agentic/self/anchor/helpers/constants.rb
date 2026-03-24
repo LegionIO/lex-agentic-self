@@ -22,7 +22,7 @@ module Legion
                 [(0.6...0.8),  :firm],
                 [(0.4...0.6),  :moderate],
                 [(0.2...0.4),  :loose],
-                [(..0.2),      :drifting]
+                [..0.2,        :drifting]
               ].freeze
 
               FLEXIBILITY_LABELS = [
@@ -30,7 +30,7 @@ module Legion
                 [(0.6...0.8),  :flexible],
                 [(0.4...0.6),  :moderate],
                 [(0.2...0.4),  :rigid],
-                [(..0.2),      :brittle]
+                [..0.2,        :brittle]
               ].freeze
 
               def self.label_for(table, value)
