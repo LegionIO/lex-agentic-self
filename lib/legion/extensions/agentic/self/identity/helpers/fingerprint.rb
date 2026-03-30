@@ -10,6 +10,8 @@ module Legion
         module Identity
           module Helpers
             class Fingerprint
+              include Legion::Data::Helper if defined?(Legion::Data::Helper)
+
               attr_reader :model, :observation_count, :entropy_history
 
               def initialize
@@ -159,7 +161,7 @@ module Legion
               private
 
               def local_available?
-                defined?(Legion::Data::Local) && local_data_connected?
+                defined?(Legion::Data::Local) && respond_to?(:local_data_connected?) && local_data_connected?
               end
             end
           end

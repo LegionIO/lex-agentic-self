@@ -63,4 +63,20 @@ RSpec.describe Legion::Extensions::Agentic::Self::Identity::Helpers::Fingerprint
       expect(fp.maturity).to eq(:developing)
     end
   end
+
+  describe '#load_from_local' do
+    it 'initializes without raising when local data is unavailable' do
+      expect { described_class.new }.not_to raise_error
+    end
+
+    it 'starts with zero observations when local data is unavailable' do
+      expect(fp.observation_count).to eq(0)
+    end
+  end
+
+  describe '#save_to_local' do
+    it 'returns nil when local data is unavailable' do
+      expect(fp.save_to_local).to be_nil
+    end
+  end
 end
