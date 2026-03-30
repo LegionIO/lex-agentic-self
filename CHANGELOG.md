@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.8] - 2026-03-30
+
+### Fixed
+- fix `NoMethodError: undefined method 'local_data_connected?'` in Identity::Fingerprint by including `Legion::Data::Helper` and adding `respond_to?` guard in `local_available?`
+
 ## [0.1.7] - 2026-03-30
 
 ### Changed
