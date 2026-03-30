@@ -31,7 +31,7 @@ module Legion
                   ns = agentic.const_get(domain, false)
                   ns.is_a?(Module) && ns.const_defined?(ext_sym, false)
                 end
-              rescue StandardError
+              rescue StandardError => _e
                 false
               end
 
@@ -39,7 +39,7 @@ module Legion
                 Constants::EXTENSION_CAPABILITIES.each_with_object({}) do |(ext_sym, _cat), acc|
                   acc[ext_sym] = { loaded: extension_loaded?(ext_sym) }
                 end
-              rescue StandardError
+              rescue StandardError => _e
                 {}
               end
 
@@ -119,7 +119,7 @@ module Legion
                 volition = tick_results[:action_selection]
                 return [] unless volition.is_a?(Hash) && volition[:intentions].is_a?(Array)
 
-                volition[:intentions].first(3).map { |i| i[:drive] }.compact
+                volition[:intentions].first(3).filter_map { |i| i[:drive] }
               end
 
               def extract_attention(tick_results)

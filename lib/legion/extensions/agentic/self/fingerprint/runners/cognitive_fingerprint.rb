@@ -7,8 +7,8 @@ module Legion
         module Fingerprint
           module Runners
             module CognitiveFingerprint
-              include Legion::Extensions::Helpers::Lex if Legion::Extensions.const_defined?(:Helpers) &&
-                                                          Legion::Extensions::Helpers.const_defined?(:Lex)
+              include Legion::Extensions::Helpers::Lex if Legion::Extensions.const_defined?(:Helpers, false) &&
+                                                          Legion::Extensions::Helpers.const_defined?(:Lex, false)
 
               def record_observation(category:, value:, **)
                 category = category.to_sym

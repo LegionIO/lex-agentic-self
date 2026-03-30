@@ -29,7 +29,7 @@ module Legion
                 data = { client_secret: client_secret }
                 data[:entra_app_id] = entra_app_id if entra_app_id
 
-                Legion::Crypt.write(path, data)
+                vault_write(path, data)
                 Legion::Logging.info "[identity:vault] stored Entra credentials for worker=#{worker_id}"
                 true
               rescue StandardError => e
@@ -68,7 +68,7 @@ module Legion
                 defined?(Legion::Crypt) &&
                   defined?(Legion::Settings) &&
                   Legion::Settings[:crypt][:vault][:connected] == true
-              rescue StandardError
+              rescue StandardError => _e
                 false
               end
             end

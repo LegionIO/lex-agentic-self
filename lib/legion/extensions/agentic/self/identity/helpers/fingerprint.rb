@@ -87,7 +87,7 @@ module Legion
               def save_to_local
                 return unless local_available?
 
-                db = Legion::Data::Local.connection
+                db = local_data_connection
 
                 @model.each do |dimension, data|
                   existing = db[:identity_fingerprint].where(dimension: dimension.to_s).first
@@ -121,14 +121,14 @@ module Legion
 
                 true
               rescue StandardError => e
-                Legion::Logging.warn "lex-identity: save_to_local failed: #{e.message}" if defined?(Legion::Logging)
+                Legion::Logging.warn "lex-identity: save_to_local failed: #{e.message}"
                 false
               end
 
               def load_from_local
                 return unless local_available?
 
-                db = Legion::Data::Local.connection
+                db = local_data_connection
 
                 db[:identity_fingerprint].each do |row|
                   dim = row[:dimension].to_sym
@@ -152,14 +152,14 @@ module Legion
 
                 true
               rescue StandardError => e
-                Legion::Logging.warn "lex-identity: load_from_local failed: #{e.message}" if defined?(Legion::Logging)
+                Legion::Logging.warn "lex-identity: load_from_local failed: #{e.message}"
                 false
               end
 
               private
 
               def local_available?
-                defined?(Legion::Data::Local) && Legion::Data::Local.connected?
+                defined?(Legion::Data::Local) && local_data_connected?
               end
             end
           end
