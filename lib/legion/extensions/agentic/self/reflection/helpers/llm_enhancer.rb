@@ -30,7 +30,7 @@ module Legion
 
               def available?
                 defined?(Legion::LLM) && Legion::LLM.respond_to?(:started?) && Legion::LLM.started?
-              rescue StandardError
+              rescue StandardError => _e
                 false
               end
 
@@ -38,7 +38,7 @@ module Legion
                 !!(defined?(Legion::LLM::Pipeline::GaiaCaller) &&
                    Legion::LLM.respond_to?(:pipeline_enabled?) &&
                    Legion::LLM.pipeline_enabled?)
-              rescue StandardError
+              rescue StandardError => _e
                 false
               end
 
@@ -165,12 +165,12 @@ module Legion
               def format_dream_results(dream_results)
                 return 'no results' unless dream_results.is_a?(Hash) && dream_results.any?
 
-                dream_results.map do |phase, result|
+                dream_results.filter_map do |phase, result|
                   next unless result.is_a?(Hash)
 
                   summary = result.except(:error).map { |k, v| "#{k}=#{v}" }.first(4).join(', ')
                   "#{phase}: #{summary}"
-                end.compact.join("\n")
+                end.join("\n")
               end
               private_class_method :format_dream_results
 

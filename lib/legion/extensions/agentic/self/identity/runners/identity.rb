@@ -7,8 +7,8 @@ module Legion
         module Identity
           module Runners
             module Identity
-              include Legion::Extensions::Helpers::Lex if Legion::Extensions.const_defined?(:Helpers) &&
-                                                          Legion::Extensions::Helpers.const_defined?(:Lex)
+              include Legion::Extensions::Helpers::Lex if Legion::Extensions.const_defined?(:Helpers, false) &&
+                                                          Legion::Extensions::Helpers.const_defined?(:Lex, false)
 
               def observe_behavior(dimension:, value:, **)
                 fingerprint = identity_fingerprint

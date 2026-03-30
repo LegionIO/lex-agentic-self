@@ -69,7 +69,7 @@ module Legion
                 variances = Constants::TRAITS.map do |t|
                   values = recent.map { |h| h[:traits][t] }
                   mean = values.sum / values.size.to_f
-                  values.map { |v| (v - mean)**2 }.sum / values.size.to_f
+                  values.sum { |v| (v - mean)**2 } / values.size.to_f
                 end
                 avg_variance = variances.sum / variances.size.to_f
                 (1.0 - (avg_variance * 10)).clamp(0.0, 1.0)

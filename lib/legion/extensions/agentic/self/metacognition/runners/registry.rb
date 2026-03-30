@@ -18,7 +18,7 @@ module Legion
                   store.register(entry)
                 end
 
-                Legion::Logging.info "[metacognition:registry] registered #{name} (#{category})" if defined?(Legion::Logging)
+                Legion::Logging.info "[metacognition:registry] registered #{name} (#{category})"
                 { success: true, name: name, category: category }
               rescue ArgumentError => e
                 { success: false, error: e.message }
@@ -132,7 +132,7 @@ module Legion
 
               def db_available?
                 defined?(Legion::Data) && Legion::Data.respond_to?(:connection) && Legion::Data.connection
-              rescue StandardError
+              rescue StandardError => _e
                 false
               end
 

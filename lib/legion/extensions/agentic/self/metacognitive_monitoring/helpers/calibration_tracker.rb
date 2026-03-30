@@ -48,7 +48,7 @@ module Legion
                 return [] if @points.empty?
 
                 bin_size  = 1.0 / bins
-                bin_edges = bins.times.map { |i| (i * bin_size).round(10) }
+                bin_edges = Array.new(bins) { |i| (i * bin_size).round(10) }
 
                 bin_edges.map do |edge|
                   upper = (edge + bin_size).round(10)

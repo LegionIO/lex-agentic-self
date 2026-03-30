@@ -23,9 +23,9 @@ module Legion
                 CREDENTIAL_REFRESH_INTERVAL
               end
 
-              def enabled?
+              def enabled? # rubocop:disable Legion/Extension/ActorEnabledSideEffects
                 defined?(Legion::Data) && Legion::Settings[:data][:connected] != false
-              rescue StandardError
+              rescue StandardError => _e
                 false
               end
 

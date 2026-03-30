@@ -7,8 +7,8 @@ module Legion
         module Metacognition
           module Runners
             module Metacognition
-              include Legion::Extensions::Helpers::Lex if Legion::Extensions.const_defined?(:Helpers) &&
-                                                          Legion::Extensions::Helpers.const_defined?(:Lex)
+              include Legion::Extensions::Helpers::Lex if Legion::Extensions.const_defined?(:Helpers, false) &&
+                                                          Legion::Extensions::Helpers.const_defined?(:Lex, false)
 
               def introspect(tick_results: {}, subsystem_states: {}, **)
                 model = if snapshot_store.stale?
