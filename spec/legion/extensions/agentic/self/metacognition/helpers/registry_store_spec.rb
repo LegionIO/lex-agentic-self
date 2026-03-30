@@ -200,7 +200,7 @@ RSpec.describe Legion::Extensions::Agentic::Self::Metacognition::Helpers::Regist
 
   describe 'thread safety' do
     it 'handles concurrent registrations without data corruption' do
-      threads = 20.times.map do |i|
+      threads = Array.new(20) do |i|
         Thread.new do
           store.register(entry.merge(name: "lex-thread-#{i}", module_name: "Mod#{i}"))
         end
@@ -212,7 +212,7 @@ RSpec.describe Legion::Extensions::Agentic::Self::Metacognition::Helpers::Regist
     it 'handles concurrent reads and writes safely' do
       store.register(entry)
       errors = []
-      threads = 10.times.map do
+      threads = Array.new(10) do
         Thread.new do
           store.get('lex-memory')
           store.update('lex-memory', { health_score: rand })

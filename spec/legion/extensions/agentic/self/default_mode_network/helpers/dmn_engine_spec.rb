@@ -171,8 +171,8 @@ RSpec.describe Legion::Extensions::Agentic::Self::DefaultModeNetwork::Helpers::D
     end
 
     it 'generates higher salience than wandering (on average)' do
-      plans   = 20.times.map { engine.plan_spontaneously }
-      wanders = 20.times.map { engine.wander }
+      plans   = Array.new(20) { engine.plan_spontaneously }
+      wanders = Array.new(20) { engine.wander }
       expect(plans.sum(&:salience) / plans.size).to be > wanders.sum(&:salience) / wanders.size
     end
   end

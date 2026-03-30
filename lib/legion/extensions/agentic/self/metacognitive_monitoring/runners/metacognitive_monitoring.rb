@@ -9,8 +9,8 @@ module Legion
         module MetacognitiveMonitoring
           module Runners
             module MetacognitiveMonitoring
-              include Legion::Extensions::Helpers::Lex if Legion::Extensions.const_defined?(:Helpers) &&
-                                                          Legion::Extensions::Helpers.const_defined?(:Lex)
+              include Legion::Extensions::Helpers::Lex if Legion::Extensions.const_defined?(:Helpers, false) &&
+                                                          Legion::Extensions::Helpers.const_defined?(:Lex, false)
 
               def record_judgment(type:, domain:, predicted_confidence: Helpers::DEFAULT_CONFIDENCE,
                                   effort: 0.5, engine: nil, **)

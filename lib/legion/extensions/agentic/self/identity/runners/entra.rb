@@ -15,7 +15,7 @@ module Legion
             #   - OIDC token validation uses the public JWKS endpoint (no special permission)
             #   - Write operations (transfer ownership, disable apps) update the Legion DB
             #     and emit events; the human completes the Entra side manually
-            module Entra
+            module Entra # rubocop:disable Legion/Extension/RunnerIncludeHelpers
               GRAPH_API_BASE = 'https://graph.microsoft.com/v1.0'
               ENTRA_JWKS_URL_TEMPLATE = 'https://login.microsoftonline.com/%<tenant_id>s/discovery/v2.0/keys'
               ENTRA_ISSUER_TEMPLATE = 'https://login.microsoftonline.com/%<tenant_id>s/v2.0'
@@ -356,7 +356,7 @@ module Legion
                 return nil unless secret && secret[:client_id] && secret[:client_secret]
 
                 { tenant_id: tenant_id, client_id: secret[:client_id], client_secret: secret[:client_secret] }
-              rescue StandardError
+              rescue StandardError => _e
                 nil
               end
 

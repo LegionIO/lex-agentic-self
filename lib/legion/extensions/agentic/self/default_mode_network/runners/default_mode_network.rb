@@ -7,8 +7,8 @@ module Legion
         module DefaultModeNetwork
           module Runners
             module DefaultModeNetwork
-              include Legion::Extensions::Helpers::Lex if Legion::Extensions.const_defined?(:Helpers) &&
-                                                          Legion::Extensions::Helpers.const_defined?(:Lex)
+              include Legion::Extensions::Helpers::Lex if Legion::Extensions.const_defined?(:Helpers, false) &&
+                                                          Legion::Extensions::Helpers.const_defined?(:Lex, false)
 
               def register_external_stimulus(source: nil, **)
                 log.debug "[dmn] register_stimulus: source=#{source}"

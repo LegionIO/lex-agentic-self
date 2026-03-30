@@ -7,8 +7,8 @@ module Legion
         module Anosognosia
           module Runners
             module Anosognosia
-              include Legion::Extensions::Helpers::Lex if Legion::Extensions.const_defined?(:Helpers) &&
-                                                          Legion::Extensions::Helpers.const_defined?(:Lex)
+              include Legion::Extensions::Helpers::Lex if Legion::Extensions.const_defined?(:Helpers, false) &&
+                                                          Legion::Extensions::Helpers.const_defined?(:Lex, false)
 
               def register_deficit(domain:, deficit_type:, severity:, acknowledged: false, **)
                 deficit = engine.register_deficit(
