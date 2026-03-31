@@ -57,8 +57,8 @@ RSpec.describe Legion::Extensions::Agentic::Self::RelationshipArc::Helpers::ArcE
   describe '#relationship_health' do
     it 'computes weighted health score' do
       health = engine.relationship_health(
-        attachment_strength: 0.8,
-        reciprocity_balance: 0.6,
+        attachment_strength:       0.8,
+        reciprocity_balance:       0.6,
         communication_consistency: 0.7
       )
       expected = (0.8 * 0.4) + (0.6 * 0.3) + (0.7 * 0.3)
@@ -67,8 +67,8 @@ RSpec.describe Legion::Extensions::Agentic::Self::RelationshipArc::Helpers::ArcE
 
     it 'clamps to 0.0..1.0' do
       health = engine.relationship_health(
-        attachment_strength: 1.5,
-        reciprocity_balance: 1.5,
+        attachment_strength:       1.5,
+        reciprocity_balance:       1.5,
         communication_consistency: 1.5
       )
       expect(health).to eq(1.0)

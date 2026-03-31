@@ -13,7 +13,7 @@ module Legion
               def record_milestone(agent_id:, type:, description:, significance:, **)
                 unless Helpers::Constants::MILESTONE_TYPES.include?(type.to_sym)
                   return { success: false,
-                           error: "unknown type: #{type}" }
+                           error:   "unknown type: #{type}" }
                 end
 
                 engine = arc_engine_for(agent_id)
@@ -53,12 +53,12 @@ module Legion
                 return unless narrator
 
                 narrator.record_episode(
-                  content: milestone.description,
-                  episode_type: :relationship,
+                  content:           milestone.description,
+                  episode_type:      :relationship,
                   emotional_valence: 0.3,
-                  significance: milestone.significance,
-                  domain: :relationship,
-                  tags: ['partner', 'milestone', milestone.type.to_s]
+                  significance:      milestone.significance,
+                  domain:            :relationship,
+                  tags:              ['partner', 'milestone', milestone.type.to_s]
                 )
               rescue StandardError => e
                 warn "[relationship_arc] narrative stamp failed: #{e.message}"
@@ -68,7 +68,7 @@ module Legion
                 return nil unless defined?(Legion::Extensions::Agentic::Self::NarrativeIdentity::Client)
 
                 @narrative_client ||= Legion::Extensions::Agentic::Self::NarrativeIdentity::Client.new
-              rescue StandardError
+              rescue StandardError => _e
                 nil
               end
             end

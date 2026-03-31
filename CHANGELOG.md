@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.10] - 2026-03-31
+
+### Added
+- RelationshipArc sub-module for Phase C relational intelligence
+- Constants: chapters, milestone types, health weights, chapter thresholds
+- Milestone: typed data class with UUID, significance clamping, serialization
+- ArcEngine: chapter progression, milestone tracking, relationship health, Apollo Local persistence
+- RelationshipArc runner: record_milestone, update_arc, arc_stats with NarrativeIdentity episode stamping
+
 ## [0.1.9] - 2026-03-31
 
 ### Added

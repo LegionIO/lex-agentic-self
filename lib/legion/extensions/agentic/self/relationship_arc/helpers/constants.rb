@@ -15,8 +15,8 @@ module Legion
               ].freeze
 
               HEALTH_WEIGHTS = {
-                attachment_strength: 0.4,
-                reciprocity_balance: 0.3,
+                attachment_strength:       0.4,
+                reciprocity_balance:       0.3,
                 communication_consistency: 0.3
               }.freeze
 
