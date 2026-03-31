@@ -17,6 +17,7 @@ require_relative 'self/agency'
 require_relative 'self/reflection'
 require_relative 'self/anosognosia'
 require_relative 'self/default_mode_network'
+require_relative 'self/relationship_arc'
 
 module Legion
   module Extensions
