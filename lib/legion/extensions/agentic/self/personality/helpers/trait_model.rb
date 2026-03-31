@@ -30,6 +30,14 @@ module Legion
                 @traits[name.to_sym]
               end
 
+              def apply_partner_signals(signals)
+                observations = extract_partner_observations(signals)
+                return if observations.empty?
+
+                apply_observations(observations)
+                record_snapshot
+              end
+
               def formed?
                 @observation_count >= Constants::FORMATION_THRESHOLD
               end
@@ -104,6 +112,21 @@ module Legion
               end
 
               private
+
+              def extract_partner_observations(signals)
+                observations = Hash.new { |h, k| h[k] = [] }
+
+                Constants::PARTNER_SIGNAL_MAP.each do |signal_key, (trait, direction, weight)|
+                  value = signals[signal_key]
+                  next unless value.is_a?(Numeric)
+                  next if value <= Constants::PARTNER_SIGNAL_THRESHOLD
+
+                  effective = direction == :positive ? value : 1.0 - value
+                  observations[trait] << { value: effective, weight: weight }
+                end
+
+                observations
+              end
 
               def extract_observations(signals)
                 observations = Hash.new { |h, k| h[k] = [] }

@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.9] - 2026-03-31
+
+### Added
+- add `PARTNER_SIGNAL_MAP` and `PARTNER_SIGNAL_THRESHOLD` constants to Personality::Helpers::Constants for partner-specific OCEAN nudges (weight 0.2 per signal)
+- add `TraitModel#apply_partner_signals` to nudge extraversion, agreeableness, openness, and conscientiousness from partner engagement patterns; signals below threshold (0.3) are ignored
+- wire partner signal extraction into `PersonalityStore#update` via `tick_results[:social]` reputation data (engagement frequency, direct address ratio, content diversity, consistency)
+- add 16 specs covering PARTNER_SIGNAL_MAP entries, threshold gating, multi-signal application, and no observation_count side-effect
+
 ## [0.1.8] - 2026-03-30
 
 ### Fixed

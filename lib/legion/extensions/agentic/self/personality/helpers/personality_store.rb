@@ -16,6 +16,8 @@ module Legion
               def update(tick_results)
                 signals = extract_signals(tick_results)
                 @model.update(signals)
+                partner_signals = extract_partner_signals(tick_results)
+                @model.apply_partner_signals(partner_signals) unless partner_signals.empty?
               end
 
               def full_description
@@ -40,6 +42,42 @@ module Legion
               end
 
               private
+
+              def extract_partner_signals(tick_results)
+                counts = partner_records(tick_results)
+                return {} if counts.empty?
+
+                {
+                  partner_engagement_frequency: partner_engagement_frequency(counts),
+                  partner_direct_address_ratio: avg_partner_field(counts, :direct_address_ratio),
+                  partner_content_diversity:    avg_partner_diversity(counts),
+                  partner_consistency:          avg_partner_field(counts, :consistency)
+                }.compact
+              end
+
+              def partner_records(tick_results)
+                social = tick_results[:social] || tick_results[:social_cognition] || {}
+                return [] unless social.is_a?(Hash)
+
+                reputation = social[:reputation_updates] || social[:partners] || {}
+                return [] unless reputation.is_a?(Hash) && reputation.any?
+
+                reputation.values.grep(Hash)
+              end
+
+              def partner_engagement_frequency(counts)
+                (counts.count { |p| p[:message_count].to_i.positive? } / counts.size.to_f).clamp(0.0, 1.0)
+              end
+
+              def avg_partner_field(counts, key)
+                vals = counts.filter_map { |p| p[key] }.grep(Numeric)
+                vals.any? ? (vals.sum / vals.size.to_f).clamp(0.0, 1.0) : nil
+              end
+
+              def avg_partner_diversity(counts)
+                vals = counts.filter_map { |p| p[:topic_diversity] || p[:content_diversity] }.grep(Numeric)
+                vals.any? ? (vals.sum / vals.size.to_f).clamp(0.0, 1.0) : nil
+              end
 
               def extract_signals(tick_results)
                 signals = {}
