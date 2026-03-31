@@ -70,6 +70,20 @@ module Legion
                 mood_stability:        [:neuroticism, :negative, 0.3]
               }.freeze
 
+              # Partner-specific signal map: partner interaction patterns that slowly nudge OCEAN traits.
+              # Lower weight (0.2) than general signals — personality should drift very slowly from
+              # partner engagement alone.
+              # Each entry: [trait, direction, weight]
+              PARTNER_SIGNAL_MAP = {
+                partner_engagement_frequency: [:extraversion, :positive, 0.2],
+                partner_direct_address_ratio: [:agreeableness, :positive, 0.2],
+                partner_content_diversity:    [:openness, :positive, 0.2],
+                partner_consistency:          [:conscientiousness, :positive, 0.2]
+              }.freeze
+
+              # Minimum signal value required to apply a partner nudge (0.0–1.0)
+              PARTNER_SIGNAL_THRESHOLD = 0.3
+
               # Threshold for "high" trait descriptor
               HIGH_THRESHOLD = 0.65
 
