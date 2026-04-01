@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.11] - 2026-03-31
+
+### Fixed
+- `ArcEngine#to_h` now returns the last computed `relationship_health` score instead of always nil; `relationship_health()` caches result in `@last_health`
+- `ArcEngine#arc_state_hash` now includes `milestones_today` key (milestones with `created_at` matching today in local time)
+- `SelfTalk::Runners::SelfTalk#stub_turn_content` replaced by `mechanical_turn_content` backed by `VOICE_BANK` — produces real, meaningful content for critic/advocate/explorer/pragmatist voices; unknown types fall back to `VOICE_BANK_GENERIC`
+- `SelfTalk::Runners::SelfTalk#generate_summary_for_dialogue` replaces static "Dialogue concluded" fallback with `mechanical_summary` — includes turn count, voices, and dominant position
+- `Identity::Runners::Entra#rotate_client_secret` now emits a `Legion::Logging.warn` when `rotation_enabled: true` but Graph API rotation is not yet implemented, and returns `action_required` with instructions instead of a silent error
+
 ## [0.1.10] - 2026-03-31
 
 ### Added

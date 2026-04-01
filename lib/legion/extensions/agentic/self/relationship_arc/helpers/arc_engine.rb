@@ -41,7 +41,7 @@ module Legion
                 score = (attachment_strength.to_f * w[:attachment_strength]) +
                         (reciprocity_balance.to_f * w[:reciprocity_balance]) +
                         (communication_consistency.to_f * w[:communication_consistency])
-                score.clamp(0.0, 1.0)
+                @last_health = score.clamp(0.0, 1.0)
               end
 
               def dirty?
@@ -77,14 +77,27 @@ module Legion
               def to_h
                 { agent_id: @agent_id, current_chapter: @current_chapter,
                   milestones: @milestones.map(&:to_h),
-                  relationship_health: nil, milestone_count: @milestones.size }
+                  relationship_health: @last_health, milestone_count: @milestones.size }
               end
 
               private
 
               def arc_state_hash
                 { agent_id: @agent_id, current_chapter: @current_chapter,
-                  milestones: @milestones.map(&:to_h) }
+                  milestones: @milestones.map(&:to_h),
+                  milestones_today: @milestones.select { |m| milestone_today?(m) }.map(&:to_h) }
+              end
+
+              def milestone_today?(milestone)
+                ts = milestone.respond_to?(:created_at) ? milestone.created_at : milestone[:created_at]
+                return false unless ts
+
+                today = ::Time.now
+                t = ts.is_a?(::Time) ? ts.localtime : ::Time.parse(ts.to_s)
+                t.year == today.year && t.mon == today.mon && t.mday == today.mday
+              rescue StandardError => e
+                warn "[arc_engine] milestone_today? error: #{e.message}"
+                false
               end
 
               def derive_chapter(bond_stage)

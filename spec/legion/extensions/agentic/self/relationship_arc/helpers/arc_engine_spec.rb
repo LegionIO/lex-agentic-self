@@ -120,5 +120,46 @@ RSpec.describe Legion::Extensions::Agentic::Self::RelationshipArc::Helpers::ArcE
       h = engine.to_h
       expect(h).to include(:agent_id, :current_chapter, :milestones, :relationship_health)
     end
+
+    it 'relationship_health is nil before relationship_health() is called' do
+      expect(engine.to_h[:relationship_health]).to be_nil
+    end
+
+    it 'relationship_health reflects the last computed value' do
+      engine.relationship_health(
+        attachment_strength:       0.8,
+        reciprocity_balance:       0.6,
+        communication_consistency: 0.7
+      )
+      h = engine.to_h
+      expected = (0.8 * 0.4) + (0.6 * 0.3) + (0.7 * 0.3)
+      expect(h[:relationship_health]).to be_within(0.01).of(expected)
+    end
+
+    it 'includes milestone_count' do
+      engine.add_milestone(type: :first_interaction, description: 'x', significance: 0.5)
+      expect(engine.to_h[:milestone_count]).to eq(1)
+    end
+  end
+
+  describe '#arc_state_hash (via to_apollo_entries)' do
+    it 'includes milestones_today for milestones added today' do
+      engine.add_milestone(type: :first_interaction, description: 'today', significance: 0.9)
+      entries = engine.to_apollo_entries
+      parsed = JSON.parse(entries.first[:content], symbolize_names: true)
+      expect(parsed).to have_key(:milestones_today)
+      expect(parsed[:milestones_today].size).to eq(1)
+    end
+
+    it 'milestones_today is empty when milestones have old timestamps' do
+      ms = Legion::Extensions::Agentic::Self::RelationshipArc::Helpers::Milestone.new(
+        type: :first_interaction, description: 'old', significance: 0.5,
+        created_at: Time.now.utc - (2 * 86_400)
+      )
+      engine.instance_variable_get(:@milestones) << ms
+      entries = engine.to_apollo_entries
+      parsed = JSON.parse(entries.first[:content], symbolize_names: true)
+      expect(parsed[:milestones_today]).to eq([])
+    end
   end
 end
