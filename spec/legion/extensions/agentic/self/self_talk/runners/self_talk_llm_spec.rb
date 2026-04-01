@@ -137,7 +137,7 @@ RSpec.describe Legion::Extensions::Agentic::Self::SelfTalk::Runners::SelfTalk, '
         result = client.conclude_dialogue(dialogue_id: did)
         expect(result[:concluded]).to be true
         report = client.dialogue_report(dialogue_id: did)
-        expect(report[:dialogue][:conclusion]).to eq('Dialogue concluded')
+        expect(report[:dialogue][:conclusion]).to match(/turns across .* voices\. Dominant position:/)
       end
     end
 
@@ -151,7 +151,7 @@ RSpec.describe Legion::Extensions::Agentic::Self::SelfTalk::Runners::SelfTalk, '
         result = client.conclude_dialogue(dialogue_id: did)
         expect(result[:concluded]).to be true
         report = client.dialogue_report(dialogue_id: did)
-        expect(report[:dialogue][:conclusion]).to eq('Dialogue concluded')
+        expect(report[:dialogue][:conclusion]).to match(/turns across .* voices\. Dominant position:/)
       end
     end
 

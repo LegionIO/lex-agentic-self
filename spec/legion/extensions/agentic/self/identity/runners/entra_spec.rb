@@ -338,6 +338,59 @@ RSpec.describe Legion::Extensions::Agentic::Self::Identity::Runners::Entra do
       expect(result[:action_required]).to be false
       expect(result[:days_remaining]).to be > 30
     end
+
+    context 'when rotation_enabled is true and secret is expiring (fix 5)' do
+      before do
+        stub_const('Legion::Settings', Class.new do
+          def self.dig(*keys)
+            map = {
+              %i[identity entra rotation_enabled]     => true,
+              %i[identity entra rotation_buffer_days] => 30
+            }
+            map[keys]
+          end
+
+          def self.[](_key) = {}
+        end)
+      end
+
+      it 'emits a warning log when graph api rotation is not implemented' do
+        vault_mod = Module.new do
+          def self.read_client_secret(**)
+            { client_secret: 'val', client_secret_expires_at: (Time.now + (86_400 * 10)).iso8601 }
+          end
+        end
+        stub_const('Legion::Extensions::Agentic::Self::Identity::Helpers::VaultSecrets', vault_mod)
+
+        warned = false
+        allow(Legion::Logging).to receive(:warn) do |msg|
+          warned = true if msg.include?('graph_api_rotation_not_implemented') ||
+                           msg.include?('Graph API rotation is not yet implemented')
+        end
+
+        result = client.rotate_client_secret(worker_id: 'w1')
+
+        expect(warned).to be true
+        expect(result[:rotated]).to be false
+        expect(result[:error]).to eq('graph_api_rotation_not_implemented')
+        expect(result[:action_required]).to include('Manual rotation needed')
+      end
+
+      it 'returns dry_run result without warning when dry_run: true' do
+        vault_mod = Module.new do
+          def self.read_client_secret(**)
+            { client_secret: 'val', client_secret_expires_at: (Time.now + (86_400 * 10)).iso8601 }
+          end
+        end
+        stub_const('Legion::Extensions::Agentic::Self::Identity::Helpers::VaultSecrets', vault_mod)
+
+        expect(Legion::Logging).not_to receive(:warn).with(a_string_including('not yet implemented'))
+
+        result = client.rotate_client_secret(worker_id: 'w1', dry_run: true)
+        expect(result[:dry_run]).to be true
+        expect(result[:would_rotate]).to be true
+      end
+    end
   end
 
   # ---------------------------------------------------------------------------

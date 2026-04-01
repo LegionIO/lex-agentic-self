@@ -104,6 +104,35 @@ module Legion
                 { decayed: decayed, voices: voice_list }
               end
 
+              VOICE_BANK = {
+                critic:     [
+                  { content: 'What could go wrong with this approach?', position: :challenge },
+                  { content: 'Are we overlooking any risks here?', position: :challenge },
+                  { content: 'This needs more careful consideration.', position: :caution }
+                ],
+                advocate:   [
+                  { content: 'This aligns with our core values.', position: :support },
+                  { content: 'The potential benefits outweigh the risks.', position: :support },
+                  { content: 'We should move forward with this.', position: :affirm }
+                ],
+                explorer:   [
+                  { content: 'What alternatives have we not considered?', position: :explore },
+                  { content: 'There may be an unconventional approach here.', position: :explore },
+                  { content: 'Let us examine this from another angle.', position: :clarify }
+                ],
+                pragmatist: [
+                  { content: 'What is the simplest path forward?', position: :simplify },
+                  { content: 'Focus on what is actionable now.', position: :prioritize },
+                  { content: 'We need concrete next steps.', position: :clarify }
+                ]
+              }.freeze
+
+              VOICE_BANK_GENERIC = [
+                { content: 'Let us think this through carefully.', position: :clarify },
+                { content: 'More reflection is needed on this topic.', position: :clarify },
+                { content: 'What do we know for certain here?', position: :clarify }
+              ].freeze
+
               private
 
               def engine
@@ -124,7 +153,7 @@ module Legion
                   )
                   return [llm_result, :llm] if llm_result
                 end
-                [stub_turn_content(voice_data.voice_type, dialogue_data.topic), :mechanical]
+                [mechanical_turn_content(voice_data.voice_type, dialogue_data.topic), :mechanical]
               end
 
               def build_prior_turns(dialogue_data)
@@ -135,13 +164,14 @@ module Legion
                 end
               end
 
-              def stub_turn_content(voice_type, topic)
-                { content: "[#{voice_type} perspective on #{topic}]", position: :clarify }
+              def mechanical_turn_content(voice_type, _topic)
+                bank = VOICE_BANK.fetch(voice_type.to_sym, VOICE_BANK_GENERIC)
+                bank.sample
               end
 
               def generate_summary_for_dialogue(dialogue_id)
                 dialogue_data = engine.dialogues[dialogue_id]
-                return 'Dialogue concluded' unless dialogue_data
+                return mechanical_summary(nil) unless dialogue_data
 
                 if Helpers::LlmEnhancer.available?
                   turns = dialogue_data.turns.map do |t|
@@ -161,7 +191,15 @@ module Legion
                   return llm_result[:summary] if llm_result
                 end
 
-                'Dialogue concluded'
+                mechanical_summary(dialogue_data)
+              end
+
+              def mechanical_summary(dialogue_data)
+                turns = dialogue_data&.turns || []
+                voices = turns.filter_map { |t| t.respond_to?(:voice_id) ? engine.voices[t.voice_id]&.name || t.voice_id : t[:voice_id] }.uniq
+                positions = turns.filter_map { |t| t.respond_to?(:position) ? t.position : t[:position] }.tally
+                dominant = positions.max_by { |_, count| count }&.first
+                "#{turns.size} turns across #{voices.join(', ')} voices. Dominant position: #{dominant || 'none'}."
               end
             end
           end

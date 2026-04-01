@@ -193,4 +193,64 @@ RSpec.describe Legion::Extensions::Agentic::Self::SelfTalk::Runners::SelfTalk do
       expect(voice[:name]).to eq('Critic')
     end
   end
+
+  describe 'mechanical voice bank (fix 3)' do
+    let(:runner_class) do
+      Class.new do
+        include Legion::Extensions::Agentic::Self::SelfTalk::Runners::SelfTalk
+      end
+    end
+    let(:runner) { runner_class.new }
+
+    it 'produces real content for known voice types' do
+      %i[critic advocate explorer pragmatist].each do |type|
+        result = runner.send(:mechanical_turn_content, type, 'test topic')
+        expect(result[:content]).not_to be_empty
+        expect(result[:content]).not_to match(/\A\[/)
+        expect(result[:position]).not_to be_nil
+      end
+    end
+
+    it 'falls back to generic bank for unknown voice types' do
+      result = runner.send(:mechanical_turn_content, :unknown_voice, 'some topic')
+      expect(result[:content]).not_to be_empty
+      expect(result[:position]).not_to be_nil
+    end
+
+    it 'VOICE_BANK covers critic, advocate, explorer, pragmatist' do
+      bank = Legion::Extensions::Agentic::Self::SelfTalk::Runners::SelfTalk::VOICE_BANK
+      expect(bank.keys).to include(:critic, :advocate, :explorer, :pragmatist)
+    end
+  end
+
+  describe 'mechanical summary (fix 4)' do
+    let(:runner_class) do
+      Class.new do
+        include Legion::Extensions::Agentic::Self::SelfTalk::Runners::SelfTalk
+      end
+    end
+    let(:runner) { runner_class.new }
+
+    it 'produces a non-empty summary when dialogue_data is nil' do
+      summary = runner.send(:mechanical_summary, nil)
+      expect(summary).to be_a(String)
+      expect(summary).not_to be_empty
+    end
+
+    it 'includes turn count in summary' do
+      did = start_dialogue(topic: 'summary test')
+      vid = register_voice(name: 'Critic', type: :critic)
+      client.add_turn(dialogue_id: did, voice_id: vid, content: 'Point one', position: :challenge)
+      client.add_turn(dialogue_id: did, voice_id: vid, content: 'Point two', position: :challenge)
+
+      result = client.conclude_dialogue(dialogue_id: did)
+      expect(result[:concluded]).to be true
+    end
+
+    it 'conclude_dialogue without summary uses mechanical_summary' do
+      did = start_dialogue(topic: 'no summary')
+      result = client.conclude_dialogue(dialogue_id: did)
+      expect(result[:concluded]).to be true
+    end
+  end
 end

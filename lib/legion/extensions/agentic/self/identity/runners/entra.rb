@@ -293,8 +293,11 @@ module Legion
 
                 return { rotated: false, worker_id: worker_id, dry_run: true, would_rotate: true } if dry_run
 
-                # Graph API rotation would go here when permission is granted
-                { rotated: false, worker_id: worker_id, error: 'graph_api_rotation_not_implemented' }
+                # Graph API rotation is blocked on Azure Application.ReadWrite.All permission.
+                # Emit a loud warning so callers are never silently misled.
+                Legion::Logging.warn "[identity:entra] Client secret rotation is enabled but Graph API rotation is not yet implemented. Worker: #{worker_id}"
+                { rotated: false, worker_id: worker_id, error: 'graph_api_rotation_not_implemented',
+                  action_required: 'Manual rotation needed — Graph API write permission not yet granted' }
               end
 
               def credential_refresh_cycle(**)
