@@ -61,14 +61,15 @@ module Legion
                   tags:              ['partner', 'milestone', milestone.type.to_s]
                 )
               rescue StandardError => e
-                warn "[relationship_arc] narrative stamp failed: #{e.message}"
+                log.error "[relationship_arc] narrative stamp failed: #{e.message}"
               end
 
               def resolve_narrative_identity
                 return nil unless defined?(Legion::Extensions::Agentic::Self::NarrativeIdentity::Client)
 
                 @narrative_client ||= Legion::Extensions::Agentic::Self::NarrativeIdentity::Client.new
-              rescue StandardError => _e
+              rescue StandardError => e
+                log.error "[relationship_arc] resolve_narrative_identity failed: #{e.message}"
                 nil
               end
             end

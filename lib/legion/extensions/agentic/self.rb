@@ -40,6 +40,39 @@ module Legion
         def self.transport_required?
           false
         end
+
+        def self.personality_snapshot
+          client = Personality::Client.new
+          client.personality_profile
+        rescue StandardError => e
+          Legion::Logging.warn "[self] personality_snapshot failed: #{e.message}"
+          {}
+        end
+
+        def self.reflection_snapshot
+          client = Reflection::Client.new
+          result = client.recent_reflections(limit: 100)
+          result.is_a?(Hash) ? (result[:reflections] || []) : []
+        rescue StandardError => e
+          Legion::Logging.warn "[self] reflection_snapshot failed: #{e.message}"
+          []
+        end
+
+        def self.restore_personality(data)
+          return unless data.is_a?(Hash) && !data.empty?
+
+          Legion::Logging.info "[self] restore_personality: #{data.keys.join(', ')}"
+        rescue StandardError => e
+          Legion::Logging.error "[self] restore_personality failed: #{e.message}"
+        end
+
+        def self.restore_reflections(data)
+          return unless data.is_a?(Array) && !data.empty?
+
+          Legion::Logging.info "[self] restore_reflections: #{data.size} entries"
+        rescue StandardError => e
+          Legion::Logging.error "[self] restore_reflections failed: #{e.message}"
+        end
       end
     end
   end

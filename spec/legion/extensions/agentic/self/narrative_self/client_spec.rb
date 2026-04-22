@@ -8,7 +8,7 @@ RSpec.describe Legion::Extensions::Agentic::Self::NarrativeSelf::Client do
   end
 
   it 'includes all runner methods' do
-    expect(client).to respond_to(:record_episode)
+    expect(client).to respond_to(:record_narrative_self_episode)
     expect(client).to respond_to(:recent_episodes)
     expect(client).to respond_to(:significant_episodes)
     expect(client).to respond_to(:create_thread)
@@ -28,20 +28,20 @@ RSpec.describe Legion::Extensions::Agentic::Self::NarrativeSelf::Client do
       client.create_thread(theme: :mastery, domain: :technical)
 
       # Record experiences
-      client.record_episode(
+      client.record_narrative_self_episode(
         description:       'built first extension',
         episode_type:      :achievement,
         domain:            :technical,
         emotional_valence: 0.7,
         tags:              %i[building mastery]
       )
-      client.record_episode(
+      client.record_narrative_self_episode(
         description:  'learned about EMA',
         episode_type: :insight,
         domain:       :cognition,
         tags:         %i[learning math]
       )
-      client.record_episode(
+      client.record_narrative_self_episode(
         description:       'test failure taught me about edge cases',
         episode_type:      :discovery,
         domain:            :technical,

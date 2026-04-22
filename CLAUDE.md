@@ -30,6 +30,7 @@ Domain consolidation gem for self-model, identity, metacognition, and self-aware
 | `Self::Personality` | `lex-personality` | Big Five OCEAN trait model |
 | `Self::Anosognosia` | `lex-anosognosia` | Unawareness of own deficits |
 | `Self::DefaultModeNetwork` | `lex-default-mode-network` | DMN analog — active during self-referential processing |
+| `Self::RelationshipArc` | `lex-relationship-arc` | Tracks relationship milestones and bond progression with other agents; stamps NarrativeIdentity episodes on milestone events |
 
 ## Metacognition Namespace Note
 

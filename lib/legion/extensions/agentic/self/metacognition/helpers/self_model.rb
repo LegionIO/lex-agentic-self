@@ -31,7 +31,8 @@ module Legion
                   ns = agentic.const_get(domain, false)
                   ns.is_a?(Module) && ns.const_defined?(ext_sym, false)
                 end
-              rescue StandardError => _e
+              rescue StandardError => e
+                Legion::Logging.error "[metacognition] extension_loaded? check failed: #{e.message}"
                 false
               end
 
@@ -39,7 +40,8 @@ module Legion
                 Constants::EXTENSION_CAPABILITIES.each_with_object({}) do |(ext_sym, _cat), acc|
                   acc[ext_sym] = { loaded: extension_loaded?(ext_sym) }
                 end
-              rescue StandardError => _e
+              rescue StandardError => e
+                Legion::Logging.error "[metacognition] discover_loaded_extensions failed: #{e.message}"
                 {}
               end
 

@@ -68,7 +68,8 @@ module Legion
                 defined?(Legion::Crypt) &&
                   defined?(Legion::Settings) &&
                   Legion::Settings[:crypt][:vault][:connected] == true
-              rescue StandardError => _e
+              rescue StandardError => e
+                Legion::Logging.error "[identity:vault] vault_available? check failed: #{e.message}"
                 false
               end
             end

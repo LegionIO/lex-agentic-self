@@ -3,9 +3,9 @@
 RSpec.describe Legion::Extensions::Agentic::Self::NarrativeSelf::Runners::NarrativeSelf do
   let(:client) { Legion::Extensions::Agentic::Self::NarrativeSelf::Client.new }
 
-  describe '#record_episode' do
+  describe '#record_narrative_self_episode' do
     it 'returns success with episode data' do
-      result = client.record_episode(description: 'completed first build', episode_type: :achievement)
+      result = client.record_narrative_self_episode(description: 'completed first build', episode_type: :achievement)
       expect(result[:success]).to be true
       expect(result[:episode][:description]).to eq('completed first build')
       expect(result[:episode][:episode_type]).to eq(:achievement)
@@ -14,7 +14,7 @@ RSpec.describe Legion::Extensions::Agentic::Self::NarrativeSelf::Runners::Narrat
 
   describe '#recent_episodes' do
     before do
-      3.times { |i| client.record_episode(description: "event #{i}") }
+      3.times { |i| client.record_narrative_self_episode(description: "event #{i}") }
     end
 
     it 'returns recent episodes' do
@@ -26,8 +26,8 @@ RSpec.describe Legion::Extensions::Agentic::Self::NarrativeSelf::Runners::Narrat
 
   describe '#significant_episodes' do
     before do
-      client.record_episode(description: 'major', significance: 0.9)
-      client.record_episode(description: 'minor', significance: 0.1)
+      client.record_narrative_self_episode(description: 'major', significance: 0.9)
+      client.record_narrative_self_episode(description: 'minor', significance: 0.1)
     end
 
     it 'filters by significance' do
@@ -39,8 +39,8 @@ RSpec.describe Legion::Extensions::Agentic::Self::NarrativeSelf::Runners::Narrat
 
   describe '#episodes_by_type' do
     before do
-      client.record_episode(description: 'win', episode_type: :achievement)
-      client.record_episode(description: 'learn', episode_type: :insight)
+      client.record_narrative_self_episode(description: 'win', episode_type: :achievement)
+      client.record_narrative_self_episode(description: 'learn', episode_type: :insight)
     end
 
     it 'filters by type' do
@@ -72,7 +72,7 @@ RSpec.describe Legion::Extensions::Agentic::Self::NarrativeSelf::Runners::Narrat
 
   describe '#timeline' do
     before do
-      3.times { |i| client.record_episode(description: "event #{i}") }
+      3.times { |i| client.record_narrative_self_episode(description: "event #{i}") }
     end
 
     it 'returns timeline entries' do
@@ -85,8 +85,8 @@ RSpec.describe Legion::Extensions::Agentic::Self::NarrativeSelf::Runners::Narrat
 
   describe '#self_summary' do
     before do
-      client.record_episode(description: 'a', episode_type: :achievement, domain: :tech)
-      client.record_episode(description: 'b', episode_type: :insight, domain: :personal)
+      client.record_narrative_self_episode(description: 'a', episode_type: :achievement, domain: :tech)
+      client.record_narrative_self_episode(description: 'b', episode_type: :insight, domain: :personal)
     end
 
     it 'returns comprehensive summary' do
@@ -100,7 +100,7 @@ RSpec.describe Legion::Extensions::Agentic::Self::NarrativeSelf::Runners::Narrat
 
   describe '#update_narrative_self' do
     it 'decays and reports counts' do
-      client.record_episode(description: 'test')
+      client.record_narrative_self_episode(description: 'test')
       result = client.update_narrative_self
       expect(result[:success]).to be true
       expect(result[:episode_count]).to eq(1)
