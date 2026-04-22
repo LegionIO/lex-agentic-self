@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.13] - 2026-04-22
+### Added
+- Module-level snapshot methods (`personality_snapshot`, `reflection_snapshot`, `restore_personality`, `restore_reflections`) enabling memory↔self bridge for snapshot save/restore
+- RelationshipArc documented in CLAUDE.md
+### Fixed
+- Faraday moved from development to runtime dependency (was causing LoadError in production)
+- NarrativeSelf `record_episode` renamed to `record_narrative_self_episode` to resolve collision with NarrativeIdentity
+- Silent rescue blocks in vault_secrets, self_model, relationship_arc now log errors
+
 ## [0.1.12] - 2026-04-15
 ### Changed
 - Set `mcp_tools?`, `mcp_tools_deferred?`, and `transport_required?` to `false` — internal cognitive pipeline extension
