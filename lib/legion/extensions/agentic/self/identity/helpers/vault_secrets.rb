@@ -16,6 +16,10 @@ module Legion
             module VaultSecrets
               VAULT_PATH_PREFIX = 'secret/data/legion/workers'
 
+              def self.log
+                Legion::Logging
+              end
+
               def self.secret_path(worker_id)
                 "#{VAULT_PATH_PREFIX}/#{worker_id}/entra"
               end
@@ -69,7 +73,7 @@ module Legion
                   defined?(Legion::Settings) &&
                   Legion::Settings[:crypt][:vault][:connected] == true
               rescue StandardError => e
-                Legion::Logging.error "[identity:vault] vault_available? check failed: #{e.message}"
+                log.error "[identity:vault] vault_available? check failed: #{e.message}"
                 false
               end
             end
