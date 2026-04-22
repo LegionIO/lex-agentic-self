@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'legion-settings', '>= 1.3.14'
   spec.add_dependency 'legion-transport', '>= 1.3.9'
 
-  spec.add_development_dependency 'faraday', '~> 2.0'
+  spec.add_dependency 'faraday', '~> 2.0'
   spec.add_development_dependency 'rspec', '~> 3.13'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubocop-legion'

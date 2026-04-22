@@ -7,6 +7,10 @@ module Legion
         module Metacognition
           module Helpers
             module SelfModel
+              def self.log
+                Legion::Logging
+              end
+
               module_function
 
               def build(subsystem_states: {}, tick_results: {})
@@ -31,7 +35,8 @@ module Legion
                   ns = agentic.const_get(domain, false)
                   ns.is_a?(Module) && ns.const_defined?(ext_sym, false)
                 end
-              rescue StandardError => _e
+              rescue StandardError => e
+                log.error "[metacognition] extension_loaded? check failed: #{e.message}"
                 false
               end
 
@@ -39,7 +44,8 @@ module Legion
                 Constants::EXTENSION_CAPABILITIES.each_with_object({}) do |(ext_sym, _cat), acc|
                   acc[ext_sym] = { loaded: extension_loaded?(ext_sym) }
                 end
-              rescue StandardError => _e
+              rescue StandardError => e
+                log.error "[metacognition] discover_loaded_extensions failed: #{e.message}"
                 {}
               end
 

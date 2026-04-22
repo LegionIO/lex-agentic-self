@@ -1,33 +1,34 @@
 # lex-agentic-self
 
-Domain consolidation gem for self-model, identity, metacognition, and self-awareness. Bundles 16 source extensions into one loadable unit under `Legion::Extensions::Agentic::Self`.
+Domain consolidation gem for self-model, identity, metacognition, and self-awareness. Bundles 17 sub-modules into one loadable unit under `Legion::Extensions::Agentic::Self`.
 
 ## Overview
 
 **Gem**: `lex-agentic-self`
-**Version**: 0.1.12
+**Version**: 0.1.13
 **Namespace**: `Legion::Extensions::Agentic::Self`
 
 ## Sub-Modules
 
-| Sub-Module | Source Gem | Purpose |
-|---|---|---|
-| `Self::Identity` | `lex-identity` | Behavioral fingerprint (6 dimensions, entropy anomaly) + Entra ID binding |
-| `Self::Metacognition` | `lex-metacognition` | Second-order self-model — discovers loaded extensions, maps capabilities |
-| `Self::MetacognitiveMonitoring` | `lex-metacognitive-monitoring` | Continuous confidence calibration, feeling-of-knowing |
-| `Self::SelfModel` | `lex-self-model` | Stable beliefs about capabilities, limitations, and values |
-| `Self::SelfTalk` | `lex-self-talk` | IFS-inspired inner dialogue — typed turns before action |
-| `Self::Reflection` | `lex-reflection` | Post-tick meta-cognitive analysis — seven categories, EMA health scores |
-| `Self::NarrativeArc` | `lex-cognitive-narrative-arc` | McAdams narrative arc — beats, tension, resolution |
-| `Self::NarrativeIdentity` | `lex-narrative-identity` | McAdams narrative identity — the agent's life story |
-| `Self::NarrativeSelf` | `lex-narrative-self` | Minimal self vs. narrative self |
-| `Self::Architecture` | `lex-cognitive-architecture` | Meta-layer graph of cognitive subsystems — bottleneck detection |
-| `Self::Fingerprint` | `lex-cognitive-fingerprint` | Unique cognitive style profile |
-| `Self::Anchor` | `lex-cognitive-anchor` | Stable cognitive anchor points |
-| `Self::Agency` | `lex-agency` | Sense of agency — authorship detection |
-| `Self::Personality` | `lex-personality` | Big Five OCEAN trait model |
-| `Self::Anosognosia` | `lex-anosognosia` | Unawareness of own deficits |
-| `Self::DefaultModeNetwork` | `lex-default-mode-network` | DMN analog — active during self-referential processing |
+| Sub-Module | Purpose |
+|---|---|
+| `Self::Identity` | Behavioral fingerprint (6 dimensions, entropy anomaly) + Entra ID binding |
+| `Self::Metacognition` | Second-order self-model — discovers loaded extensions, maps capabilities |
+| `Self::MetacognitiveMonitoring` | Continuous confidence calibration, feeling-of-knowing |
+| `Self::SelfModel` | Stable beliefs about capabilities, limitations, and values |
+| `Self::SelfTalk` | IFS-inspired inner dialogue — typed turns before action |
+| `Self::Reflection` | Post-tick meta-cognitive analysis — seven categories, EMA health scores |
+| `Self::NarrativeArc` | McAdams narrative arc — beats, tension, resolution |
+| `Self::NarrativeIdentity` | McAdams narrative identity — the agent's life story |
+| `Self::NarrativeSelf` | Minimal self vs. narrative self; autobiographical episode recording |
+| `Self::Architecture` | Meta-layer graph of cognitive subsystems — bottleneck detection |
+| `Self::Fingerprint` | Unique cognitive style profile |
+| `Self::Anchor` | Stable cognitive anchor points |
+| `Self::Agency` | Sense of agency — authorship detection |
+| `Self::Personality` | Big Five OCEAN trait model |
+| `Self::Anosognosia` | Unawareness of own deficits |
+| `Self::DefaultModeNetwork` | DMN analog — active during self-referential processing |
+| `Self::RelationshipArc` | Tracks relationship milestones and bond progression with other agents; stamps NarrativeIdentity episodes on milestone events |
 
 ## Actors
 
@@ -36,6 +37,10 @@ Domain consolidation gem for self-model, identity, metacognition, and self-aware
 - `Self::Identity::Actors::OrphanCheck` — runs every 14400s (4hr), checks for orphaned workers
 - `Self::NarrativeIdentity::Actors::NarrativeDecay` — interval actor, decays narrative identity strength
 - `Self::SelfTalk::Actors::VolumeDecay` — runs every 300s, decays inner voice volumes
+
+## Dependencies
+
+Runtime: `legion-cache`, `legion-crypt`, `legion-data`, `legion-json`, `legion-logging`, `legion-settings`, `legion-transport`, `faraday ~> 2.0` (for Identity Microsoft Graph API calls).
 
 ## Installation
 
@@ -47,8 +52,8 @@ gem 'lex-agentic-self'
 
 ```bash
 bundle install
-bundle exec rspec        # 1781 examples, 0 failures
-bundle exec rubocop      # 0 offenses
+bundle exec rspec
+bundle exec rubocop
 ```
 
 ## License

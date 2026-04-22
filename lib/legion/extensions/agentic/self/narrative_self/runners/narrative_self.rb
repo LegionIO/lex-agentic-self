@@ -10,8 +10,8 @@ module Legion
               include Legion::Extensions::Helpers::Lex if Legion::Extensions.const_defined?(:Helpers, false) &&
                                                           Legion::Extensions::Helpers.const_defined?(:Lex, false)
 
-              def record_episode(description:, episode_type: :insight, domain: :general,
-                                 significance: nil, emotional_valence: 0.0, tags: [], **)
+              def record_narrative_self_episode(description:, episode_type: :insight, domain: :general,
+                                                significance: nil, emotional_valence: 0.0, tags: [], **)
                 episode = autobiography.record_episode(
                   description:       description,
                   episode_type:      episode_type,
