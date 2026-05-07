@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.14] - 2026-05-07
+### Fixed
+- Identity fingerprint save now warns and returns false if local persistence disconnects after previously being available.
+- Reflection health now updates trust drift and mode-pattern category scores from tick results.
+- Reflection LLM enhancer rejects arbitrary extra keyword arguments instead of forwarding them.
+
 ## [0.1.13] - 2026-04-22
 ### Added
 - Module-level snapshot methods (`personality_snapshot`, `reflection_snapshot`, `restore_personality`, `restore_reflections`) enabling memory↔self bridge for snapshot save/restore

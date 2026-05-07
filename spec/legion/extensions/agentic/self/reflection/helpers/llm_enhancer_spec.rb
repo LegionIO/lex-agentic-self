@@ -75,6 +75,10 @@ RSpec.describe Legion::Extensions::Agentic::Self::Reflection::Helpers::LlmEnhanc
       allow(enhancer_mod).to receive(:available?).and_return(false)
       expect(enhancer_mod.enhance('hello')).to be_nil
     end
+
+    it 'rejects arbitrary extra kwargs instead of forwarding them to LLM' do
+      expect { enhancer_mod.enhance('hello', unexpected: true) }.to raise_error(ArgumentError)
+    end
   end
 
   describe '.available?' do

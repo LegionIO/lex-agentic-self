@@ -91,5 +91,13 @@ RSpec.describe Legion::Extensions::Agentic::Self::Identity::Helpers::Fingerprint
         expect(fp.save_to_local).to be_nil
       end
     end
+
+    it 'warns when local persistence was previously available but is no longer connected' do
+      fp.instance_variable_set(:@local_previously_available, true)
+      allow(fp).to receive(:local_data_connected?).and_return(false)
+
+      expect(Legion::Logging).to receive(:warn).with(/local persistence unavailable/)
+      expect(fp.save_to_local).to be false
+    end
   end
 end

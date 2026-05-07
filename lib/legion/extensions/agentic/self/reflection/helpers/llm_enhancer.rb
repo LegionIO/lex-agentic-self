@@ -42,12 +42,12 @@ module Legion
                 false
               end
 
-              def enhance(prompt, phase: 'reflection', **)
+              def enhance(prompt, phase: 'reflection')
                 return nil unless available?
 
                 if pipeline_available?
                   response = Legion::LLM::Pipeline::GaiaCaller.chat(
-                    message: prompt, phase: phase, **
+                    message: prompt, phase: phase
                   )
                   response&.message&.dig(:content)
                 else

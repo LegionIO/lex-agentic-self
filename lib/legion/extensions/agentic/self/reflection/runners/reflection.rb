@@ -149,6 +149,8 @@ module Legion
                 update_emotion_score(tick_results)
                 update_memory_score(tick_results)
                 update_load_score(tick_results)
+                update_trust_score(tick_results)
+                update_mode_score(tick_results)
               end
 
               def update_prediction_score(tick_results)
@@ -189,6 +191,22 @@ module Legion
 
                 utilization = elapsed / budget
                 reflection_store.update_category_score(:cognitive_load, [1.0 - utilization, 0.0].max)
+              end
+
+              def update_trust_score(tick_results)
+                social = tick_results[:social_cognition]
+                return unless social.is_a?(Hash) && social[:trust_drift].is_a?(Numeric)
+
+                reflection_store.update_category_score(:trust_drift, 1.0 - social[:trust_drift].abs)
+              end
+
+              def update_mode_score(tick_results)
+                state = tick_results[:tick_state]
+                return unless state.is_a?(Hash) && state[:mode_transitions].is_a?(Numeric)
+
+                transitions = state[:mode_transitions].to_f
+                threshold = Helpers::Constants::MODE_OSCILLATION_THRESHOLD.to_f
+                reflection_store.update_category_score(:mode_patterns, [1.0 - (transitions / threshold), 0.0].max)
               end
             end
           end

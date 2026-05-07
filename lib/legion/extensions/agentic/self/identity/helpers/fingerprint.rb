@@ -18,6 +18,7 @@ module Legion
                 @model = Dimensions.new_identity_model
                 @observation_count = 0
                 @entropy_history = []
+                @local_previously_available = false
                 load_from_local
               end
 
@@ -87,7 +88,14 @@ module Legion
               end
 
               def save_to_local
-                return unless local_available?
+                unless local_available?
+                  if @local_previously_available
+                    Legion::Logging.warn 'lex-identity: local persistence unavailable after being available'
+                    return false
+                  end
+
+                  return nil
+                end
 
                 db = local_data_connection
 
@@ -161,7 +169,9 @@ module Legion
               private
 
               def local_available?
-                defined?(Legion::Data::Local) && respond_to?(:local_data_connected?) && local_data_connected?
+                available = defined?(Legion::Data::Local) && respond_to?(:local_data_connected?) && local_data_connected?
+                @local_previously_available = true if available
+                available
               end
             end
           end
