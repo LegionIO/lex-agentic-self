@@ -46,6 +46,23 @@ RSpec.describe Legion::Extensions::Agentic::Self::Reflection::Runners::Reflectio
       expect(result[:health]).to be < 1.0
       expect(result[:category_scores][:prediction_calibration]).to eq(0.2)
     end
+
+    it 'updates trust_drift from social cognition results' do
+      client.reflect(tick_results: { social_cognition: { trust_drift: 0.4 } })
+
+      result = client.cognitive_health
+
+      expect(result[:category_scores][:trust_drift]).to eq(0.6)
+      expect(result[:health]).to be < 1.0
+    end
+
+    it 'updates mode_patterns from tick mode transition counts' do
+      client.reflect(tick_results: { tick_state: { mode_transitions: 5 } })
+
+      result = client.cognitive_health
+
+      expect(result[:category_scores][:mode_patterns]).to eq(0.0)
+    end
   end
 
   describe '#recent_reflections' do
