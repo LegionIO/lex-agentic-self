@@ -25,3 +25,6 @@ Legion/HelperMigration/DirectLlm:
 # TokenCache uses @tokens as intentionally mutable class instance variable (protected by @mutex)
 ThreadSafety/MutableClassInstanceVariable:
   Enabled: false
+
+Legion/Llm/TaxonomyEnum:
+  Enabled: false

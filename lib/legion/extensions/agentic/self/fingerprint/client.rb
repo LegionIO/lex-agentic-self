@@ -12,14 +12,6 @@ module Legion
         module Fingerprint
           class Client
             include Runners::CognitiveFingerprint
-
-            def initialize(**)
-              @fingerprint_engine = Helpers::FingerprintEngine.new
-            end
-
-            private
-
-            attr_reader :fingerprint_engine
           end
         end
       end

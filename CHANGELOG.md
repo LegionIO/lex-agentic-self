@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.15] - 2026-07-16
+### Added
+- Per-partner identity fingerprint models: `CognitiveFingerprint` runner now accepts `partner_identity:` on all methods, routing each partner to an isolated `FingerprintEngine` instance via an in-memory registry.
+- `erase_partner!(identity:)` removes the fingerprint model for a given partner identity; returns `{erased: true/false, identity:}`.
+- `tracked_partners` returns the list of partner identities currently held in the registry.
+
 ## [0.1.14] - 2026-05-07
 ### Fixed
 - Identity fingerprint save now warns and returns false if local persistence disconnects after previously being available.
