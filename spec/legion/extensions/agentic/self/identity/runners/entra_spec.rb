@@ -9,8 +9,8 @@ unless defined?(Legion::Logging)
       module_function
 
       def debug(*); end
-      def info(*);  end
-      def warn(*);  end
+      def info(*); end
+      def warn(*); end
     end
   end
 end
@@ -245,7 +245,7 @@ RSpec.describe Legion::Extensions::Agentic::Self::Identity::Runners::Entra do
   describe '#refresh_access_token' do
     let(:vault_secrets_mod) do
       Module.new do
-        def self.read_client_secret(worker_id:) # rubocop:disable Lint/UnusedMethodArgument
+        def self.read_client_secret(**)
           { client_id: 'app-id', client_secret: 'secret-val' }
         end
       end
