@@ -23,7 +23,7 @@ module Legion
                 @load             = 0.0
                 @activation_count = 0
                 @last_activated_at = nil
-                @created_at       = Time.now.utc
+                @created_at = Time.now.utc
               end
 
               def activate!

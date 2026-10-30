@@ -11,7 +11,9 @@ module Legion
                                                           Legion::Extensions::Helpers.const_defined?(:Lex, false)
 
               def introspect(tick_results: {}, subsystem_states: {}, **)
-                model = if snapshot_store.stale?
+                observed = (tick_results.is_a?(Hash) && !tick_results.empty?) ||
+                           (subsystem_states.is_a?(Hash) && !subsystem_states.empty?)
+                model = if snapshot_store.stale? || observed
                           fresh = Helpers::SelfModel.build(
                             subsystem_states: subsystem_states,
                             tick_results:     tick_results
@@ -59,8 +61,7 @@ module Legion
               end
 
               def architecture_overview(**)
-                model = snapshot_store.latest || Helpers::SelfModel.build
-                snapshot_store.store(model) if snapshot_store.stale?
+                model = introspect
 
                 {
                   identity:     model[:identity],

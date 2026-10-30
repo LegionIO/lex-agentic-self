@@ -5,7 +5,7 @@ Domain consolidation gem for self-model, identity, metacognition, and self-aware
 ## Overview
 
 **Gem**: `lex-agentic-self`
-**Version**: 0.1.13
+**Version**: 0.1.16
 **Namespace**: `Legion::Extensions::Agentic::Self`
 
 ## Sub-Modules

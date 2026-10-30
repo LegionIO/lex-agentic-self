@@ -39,8 +39,8 @@ RSpec.describe Legion::Extensions::Agentic::Self::Identity::Helpers::Fingerprint
 
   def stub_local(db)
     local_mod = Module.new do
-      define_singleton_method(:connection)  { db }
-      define_singleton_method(:connected?)  { true }
+      define_singleton_method(:connection) { db }
+      define_singleton_method(:connected?) { true }
     end
     stub_const('Legion::Data', Module.new)
     stub_const('Legion::Data::Local', local_mod)

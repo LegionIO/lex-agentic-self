@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.16] - 2026-10-29
+### Fixed
+- Refresh metacognitive snapshots immediately when new tick or subsystem observations arrive instead of hiding them behind the cache TTL.
+- Refresh expired architecture overviews through normal introspection so newly loaded extensions appear in architecture change history.
+
 ## [0.1.15] - 2026-07-16
 ### Added
 - Per-partner identity fingerprint models: `CognitiveFingerprint` runner now accepts `partner_identity:` on all methods, routing each partner to an isolated `FingerprintEngine` instance via an in-memory registry.

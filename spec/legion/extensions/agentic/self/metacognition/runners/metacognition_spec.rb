@@ -41,6 +41,24 @@ RSpec.describe Legion::Extensions::Agentic::Self::Metacognition::Runners::Metaco
       expect(model.dig(:cognitive, :health)).to eq(0.95)
       expect(store.size).to eq(2)
     end
+
+    it 'uses newly observed health and subsystem state before the cache expires' do
+      client.introspect(tick_results: tick_results, subsystem_states: { memory: { status: :healthy } })
+      changed = tick_results.merge(post_tick_reflection: { cognitive_health: 0.35 })
+
+      model = client.introspect(tick_results: changed, subsystem_states: { memory: { status: :degraded } })
+
+      expect(model.dig(:cognitive, :health)).to eq(0.35)
+      expect(client.explain_subsystem(subsystem: :memory)[:state]).to eq(status: :degraded)
+      expect(client.health_trend[:trend].map { |entry| entry[:health] }).to eq([0.88, 0.35])
+    end
+
+    it 'accepts new subsystem observations without requiring a new tick' do
+      client.introspect(subsystem_states: { memory: { status: :healthy } })
+      client.introspect(subsystem_states: { memory: { status: :degraded } })
+
+      expect(client.explain_subsystem(subsystem: :memory)[:state]).to eq(status: :degraded)
+    end
   end
 
   describe '#self_narrative' do
@@ -73,6 +91,19 @@ RSpec.describe Legion::Extensions::Agentic::Self::Metacognition::Runners::Metaco
       result = client.architecture_overview
       expect(result[:identity][:framework]).to eq('LegionIO')
       expect(result).to have_key(:capabilities)
+    end
+
+    it 'rediscovers loaded extensions after the cached architecture expires' do
+      hide_const('Legion::Extensions::Curiosity') if Legion::Extensions.const_defined?(:Curiosity, false)
+      old = client.introspect
+      old[:assembled_at] = Time.now.utc - 60
+      stub_const('Legion::Extensions::Curiosity', Module.new)
+
+      overview = client.architecture_overview
+
+      expect(overview[:architecture][:loaded]).to include(:Curiosity)
+      expect(overview[:assembled_at]).to be > old[:assembled_at]
+      expect(client.architecture_changes[:changes].last[:added]).to include(:Curiosity)
     end
   end
 
